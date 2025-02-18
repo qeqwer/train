@@ -8,7 +8,7 @@
 		<version>3.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.niko</groupId>
 	<artifactId>train</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -23,7 +23,8 @@
 	</developers>
     <modules>
         <module>member</module>
-    </modules>
+		<module>common</module>
+	</modules>
     <scm>
 		<connection/>
 		<developerConnection/>
@@ -50,7 +51,7 @@
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
-				<version>1.2.70</version>
+				<version>1.2.83</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
@@ -60,6 +61,11 @@
 				<version>5.8.35</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.niko</groupId>
+				<artifactId>common</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

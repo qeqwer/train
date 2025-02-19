@@ -1,6 +1,8 @@
 package com.niko.train.member.service;
 
 import cn.hutool.core.collection.CollUtil;
+import com.niko.train.common.exception.BusinessException;
+import com.niko.train.common.exception.BussinessExceptionEnum;
 import com.niko.train.member.domain.Member;
 import com.niko.train.member.domain.MemberExample;
 import com.niko.train.member.mapper.MemberMapper;
@@ -26,7 +28,7 @@ public class MemberService {
 
         if (CollUtil.isNotEmpty(list)) {
             // return list.get(0).getId();
-            throw new RuntimeException("手机号已注册");
+            throw new BusinessException(BussinessExceptionEnum.MEMBER_MOBILE_EXIST);
         }
 
         Member member = new Member();

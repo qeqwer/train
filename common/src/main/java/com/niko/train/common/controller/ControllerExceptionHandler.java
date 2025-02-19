@@ -43,7 +43,7 @@ public class ControllerExceptionHandler {
     @ResponseBody
     public CommonResp validExceptionHandler(BusinessException e) {
         CommonResp commonResp = new CommonResp();
-        LOG.warn("业务异常：{}", e);
+        LOG.warn("业务异常：{}", e.getE().getDesc());
         commonResp.setSuccess(false);
         commonResp.setMessage(e.getE().getDesc());
         return commonResp;

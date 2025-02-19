@@ -9,3 +9,5 @@ create table `member`
 )
     engine = innodb
     default charset = utf8mb4 comment ='会员';
+
+insert into `member` (id, mobile) values (1, '18943191561');

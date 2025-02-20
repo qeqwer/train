@@ -2,6 +2,7 @@ package com.niko.train.member.controller;
 
 import com.niko.train.common.resp.CommonResp;
 import com.niko.train.member.req.MemberRegisterReq;
+import com.niko.train.member.req.MemberSendCodeReq;
 import com.niko.train.member.service.MemberService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -30,6 +31,12 @@ public class MemberController {
     public CommonResp<Long> register(@Valid MemberRegisterReq req){
         Long register = memberService.register(req);
         return new CommonResp<>(register);
+    }
+
+    @PostMapping("/send-code")
+    public CommonResp<Long> sendCode(@Valid MemberSendCodeReq req){
+         memberService.sendCode(req);
+        return new CommonResp<>();
     }
 
 }

@@ -10,9 +10,11 @@ mobile=11111112
 ###
 
 POST http://localhost:8000/member/member/send-code
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 
-mobile=18943191561
+{
+  "mobile": "18943191561"
+}
 
 
 ####

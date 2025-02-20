@@ -3,6 +3,7 @@ package com.niko.train.member.service;
 import cn.hutool.core.collection.CollUtil;
 import com.niko.train.common.exception.BusinessException;
 import com.niko.train.common.exception.BussinessExceptionEnum;
+import com.niko.train.common.util.SnowUtil;
 import com.niko.train.member.domain.Member;
 import com.niko.train.member.domain.MemberExample;
 import com.niko.train.member.mapper.MemberMapper;
@@ -32,7 +33,7 @@ public class MemberService {
         }
 
         Member member = new Member();
-        member.setId(System.currentTimeMillis());
+        member.setId(SnowUtil.getSnowflakeNextId());
         member.setMobile(mobile);
         memberMapper.insert(member);
         return member.getId();

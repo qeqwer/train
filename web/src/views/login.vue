@@ -43,6 +43,7 @@ import  axios  from 'axios';
 import { useRouter } from "vue-router";
 // 通知组件
 import {notification} from "ant-design-vue";
+import store from "@/store";
 
 const loginForm = reactive({
   mobile: '18943191561',
@@ -51,7 +52,7 @@ const loginForm = reactive({
 
 const router = useRouter();
 
-
+// 发送验证码
 const sendCode = () => {
   axios.post('/member/member/send-code', {
     mobile: loginForm.mobile,
@@ -65,6 +66,8 @@ const sendCode = () => {
     }
   })
 };
+
+// 登录
 const login = () => {
    axios.post('/member/member/login', loginForm).then(res => {
    let data = res.data;
@@ -72,6 +75,7 @@ const login = () => {
       notification.success({description: '登录成功'});
       //  登陆成功，跳转控台主页
       router.push('/');
+      store.commit('setMember', data.content);
    } else {
       notification.error({duration: data.message});
    }

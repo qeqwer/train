@@ -53,7 +53,6 @@ const sendCode = () => {
   axios.post('http://localhost:8000/member/member/send-code', {
     mobile: loginForm.mobile,
   }).then(res => {
-    console.log(res);
     let data = res.data;
     if (data.success) {
       notification.success({description: '验证码发送成功'});
@@ -68,7 +67,6 @@ const login = () => {
    let data = res.data;
    if (data.success) {
       notification.success({description: '登录成功'});
-      console.log("登录成功：", data.content);
    } else {
       notification.error({duration: data.message});
    }

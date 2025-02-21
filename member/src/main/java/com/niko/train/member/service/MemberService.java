@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.niko.train.common.exception.BusinessException;
 import com.niko.train.common.exception.BussinessExceptionEnum;
+import com.niko.train.common.util.MyJwtUtil;
 import com.niko.train.common.util.SnowUtil;
 import com.niko.train.member.domain.Member;
 import com.niko.train.member.domain.MemberExample;
@@ -87,8 +88,11 @@ public class MemberService {
         if (!code.equals("8888")) {
             throw new BusinessException(BussinessExceptionEnum.MEMBER_MOBILE_CODE_ERROR);
         }
+        MemberLoginResp memberLoginResp = BeanUtil.copyProperties(memberDB, MemberLoginResp.class);
+        String token =  MyJwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
+        memberLoginResp.setToken(token);
 
-        return BeanUtil.copyProperties(memberDB, MemberLoginResp.class);
+        return memberLoginResp;
     }
 
     private Member selectMembers(String mobile) {

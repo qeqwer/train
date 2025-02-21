@@ -18,6 +18,11 @@ for(const i in icons){
 
 axios.interceptors.request.use(config => {
     console.log('请求参数：', config);
+    const _token = store.state.member.token;
+    if(_token){
+        config.headers.token = _token; //请求头增加token,headers.token中的‘token’ 需要和后端(gateway中过滤器)一致
+        console.log("请求headers增加token：" , _token);
+    }
     return config;
 }, error => {
     return Promise.reject(error);
@@ -27,6 +32,11 @@ axios.interceptors.response.use(response => {
     return response;
 }, error => {
     console.log('返回错误：', error);
+    if(error.response.status === 401){
+        console.log("未登录或登录超市，跳到登录页");
+        store.commit('setMember',{});
+        router.push('/login');
+    }
     return Promise.reject(error);
 });
 

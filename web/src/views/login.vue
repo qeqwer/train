@@ -77,7 +77,7 @@ const login = () => {
       router.push('/');
       store.commit('setMember', data.content);
    } else {
-      notification.error({duration: data.message});
+      notification.error({description: data.message});
    }
   });
 };

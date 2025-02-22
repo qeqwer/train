@@ -40,6 +40,7 @@
                              targetPackage="com.niko.train.member.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="member" domainObjectName="Member"/>
+<!--        <table tableName="passenger" domainObjectName="Member"/>-->
+        <table tableName="passenger" />
     </context>
 </generatorConfiguration>

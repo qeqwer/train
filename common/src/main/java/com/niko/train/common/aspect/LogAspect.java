@@ -1,7 +1,6 @@
 package com.niko.train.common.aspect;
 
 
-import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;
 import jakarta.servlet.ServletRequest;
@@ -16,7 +15,6 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -37,9 +35,6 @@ public class LogAspect {
 
     @Before("controllerPointcut()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
-
-        // 增加日志流水号
-        MDC.put("LOG_ID", System.currentTimeMillis() + RandomUtil.randomString(3));
 
         // 开始打印请求日志
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

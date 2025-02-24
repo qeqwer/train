@@ -10,7 +10,15 @@ const routes = [
   {
     path: '/',
     component: () => import( '../views/main.vue'),
-    meta:{requireAuth:true}
+    meta:{requireAuth:true},
+    children: [{
+        path: '/welcome',
+        component: () => import( '../views/main/welcome.vue')
+      }]
+  },
+  {
+    path: '',
+    redirect: '/welcome'
   }
 ]
 

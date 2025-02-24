@@ -1,15 +1,21 @@
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
+import router from "@/router";
 
-const selectedKeys2 = ref(['1']);
-const openKeys = ref(['sub1']);
+const selectedKeys = ref([]);
+watch(()=> router.currentRoute.value.path, (value)=> {
+  console.log('watch', value);
+  selectedKeys.value = [];
+  selectedKeys.value.push(value);
+}, {
+  immediate: true
+});
 </script>
 
 <template>
   <a-layout-sider width="200" style="background: #fff">
     <a-menu
-        v-model:selectedKeys="selectedKeys2"
-        v-model:openKeys="openKeys"
+        v-model:selectedKeys="selectedKeys"
         mode="inline"
         :style="{ height: '100%', borderRight: 0 }"
     >

@@ -1,9 +1,18 @@
 <script setup>
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import store from "@/store";
+import router from "@/router";
 let member = store.state.member;
 
-const selectedKeys1 = ref(['2']);
+const selectedKeys = ref([]);
+watch(()=> router.currentRoute.value.path, (value)=> {
+  console.log('watch', value);
+  selectedKeys.value = [];
+  selectedKeys.value.push(value);
+}, {
+  immediate: true
+});
+
 </script>
 
 <template>
@@ -14,7 +23,7 @@ const selectedKeys1 = ref(['2']);
       <router-link to="/login" style="color: white;"> 退出登录 </router-link>
     </div>
     <a-menu
-        v-model:selectedKeys="selectedKeys1"
+        v-model:selectedKeys="selectedKeys"
         theme="dark"
         mode="horizontal"
         :style="{ lineHeight: '64px' }"

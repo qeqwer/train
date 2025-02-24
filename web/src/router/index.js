@@ -10,11 +10,14 @@ const routes = [
   {
     path: '/',
     component: () => import( '../views/main.vue'),
-    meta:{requireAuth:true},
+    meta: {requireAuth: true},
     children: [{
-        path: '/welcome',
-        component: () => import( '../views/main/welcome.vue')
-      }]
+      path: '/welcome',
+      component: () => import( '../views/main/welcome.vue')
+    },{
+      path: '/passenger',
+      component: () => import( '../views/main/passenger.vue')
+    }]
   },
   {
     path: '',

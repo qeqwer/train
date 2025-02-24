@@ -1,14 +1,13 @@
 package com.niko.train.member.req;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
 public class PassengerSaveReq {
     private Long id;
 
-    @NotNull(message = "【会员ID】不能为空")
+//    @NotNull(message = "【会员ID】不能为空")
     private Long memberId; //Long类型不能用NotNull，Long为空时，默认为0，会插入到数据库中，导致主键冲突
 
     @NotBlank(message = "【名字】不能为空")

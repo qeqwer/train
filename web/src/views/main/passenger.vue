@@ -4,6 +4,7 @@ import axios from "axios";
 import {notification} from "ant-design-vue";
 
 const open = ref(false);
+const loading = ref(false);
 
 // reactive仅适用于对象
 const passenger = reactive({
@@ -63,6 +64,10 @@ const handleOk = () => {
     if (data.success) {
       notification.success({description: '保存成功！'});
       open.value = false;
+      handleQuery({
+        page: pagination.current,
+        size: pagination.pageSize
+      })
     } else {
       notification.error({description: data.message});
     }
@@ -76,12 +81,14 @@ const handleQuery = (param) => {
       size: pagination.pageSize
     };
   }
+  loading.value = true;
   axios.get('/member/passenger/query-list',{
     params: {
       page: param.page,
       size: param.size,
     }
   }).then((res) => {
+    loading.value = false;
     let data = res.data;
     if (data.success) {
       passengerlist.value = data.content.list;
@@ -102,6 +109,7 @@ const handleTableChange = (page) => {
   });
 };
 
+
 onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
 </script>
 
@@ -113,7 +121,12 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
         <a-button type="primary" @click="showModal">新增</a-button>
       </a-space>
     </p>
-    <a-table :dataSource="passengerlist" :columns="columns" :pagination="pagination" @change="handleTableChange"/>
+    <a-table :dataSource="passengerlist"
+             :columns="columns"
+             :pagination="pagination"
+             @change="handleTableChange"
+             :loading="loading"
+    />
     <a-modal v-model:open="open" title="乘车人" @ok="handleOk"
     okText="确认" cancelText="取消">
      <a-form  :model="passenger" :label-col="{span: 4}" :wrapper-col="{span: 14}">

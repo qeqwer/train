@@ -40,6 +40,8 @@ public class PassengerService {
 
     public PageResp<PassengerQueryResp> queryList(PassengerQueryReq req) {
         PassengerExample passengerExample = new PassengerExample();
+        // 降序
+        passengerExample.setOrderByClause("id desc");
         PassengerExample.Criteria criteria = passengerExample.createCriteria();
         if(ObjectUtil.isNotNull(req.getMemberId())) {
             criteria.andMemberIdEqualTo(req.getMemberId());

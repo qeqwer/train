@@ -7,9 +7,9 @@ const open = ref(false);
 const loading = ref(false);
 
 // reactive仅适用于对象
-const passenger = reactive({
+let passenger = reactive({
   id: undefined,
-  memberID: undefined,
+  memberId: undefined,
   name: undefined,
   idCard: undefined,
   type: undefined,
@@ -54,7 +54,18 @@ const columns = [
   }
 ];
 
-const showModal = () => {
+const onADD = () => {
+  open.value = true;
+};
+
+const onEdit = (record) => {
+  passenger.id = record.id;
+  passenger.memberId = record.memberId;
+  passenger.name = record.name;
+  passenger.idCard = record.idCard;
+  passenger.type = record.type;
+  passenger.createTime = record.createTime;
+  passenger.updateTime = record.updateTime;
   open.value = true;
 };
 
@@ -118,7 +129,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
     <p>
       <a-space>
         <a-button type="primary" @click="handleQuery()">刷新</a-button>
-        <a-button type="primary" @click="showModal">新增</a-button>
+        <a-button type="primary" @click="onADD">新增</a-button>
       </a-space>
     </p>
     <a-table :dataSource="passengerlist"
@@ -126,7 +137,15 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
              :pagination="pagination"
              @change="handleTableChange"
              :loading="loading"
-    />
+    >
+      <template #bodyCell="{column, record}">
+        <template v-if="column.dataIndex === 'operation'">
+          <a-space>
+            <a @click="onEdit(record)">编辑</a>
+          </a-space>
+        </template>
+      </template>
+    </a-table>
     <a-modal v-model:open="open" title="乘车人" @ok="handleOk"
     okText="确认" cancelText="取消">
      <a-form  :model="passenger" :label-col="{span: 4}" :wrapper-col="{span: 14}">

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 
@@ -7,7 +7,7 @@ const open = ref(false);
 const loading = ref(false);
 
 // reactive仅适用于对象
-let passenger = reactive({
+const passenger = ref({
   id: undefined,
   memberId: undefined,
   name: undefined,
@@ -18,7 +18,7 @@ let passenger = reactive({
 });
 
 // 分页的三个属性名是固定的
-const pagination = reactive({
+const pagination = ref({
   total: 0,
   current: 1,
   pageSize: 3,
@@ -59,25 +59,19 @@ const onADD = () => {
 };
 
 const onEdit = (record) => {
-  passenger.id = record.id;
-  passenger.memberId = record.memberId;
-  passenger.name = record.name;
-  passenger.idCard = record.idCard;
-  passenger.type = record.type;
-  passenger.createTime = record.createTime;
-  passenger.updateTime = record.updateTime;
+  passenger.value = record;
   open.value = true;
 };
 
 const handleOk = () => {
-  axios.post('/member/passenger/save', passenger).then(res => {
+  axios.post('/member/passenger/save', passenger.value).then(res => {
     let data = res.data;
     if (data.success) {
       notification.success({description: '保存成功！'});
       open.value = false;
       handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
+        page: pagination.value.current,
+        size: pagination.value.pageSize
       })
     } else {
       notification.error({description: data.message});
@@ -89,7 +83,7 @@ const handleQuery = (param) => {
   if(!param){
     param={
       page: 1,
-      size: pagination.pageSize
+      size: pagination.value.pageSize
     };
   }
   loading.value = true;
@@ -104,8 +98,8 @@ const handleQuery = (param) => {
     if (data.success) {
       passengerlist.value = data.content.list;
       // 设置分页控件的值
-      pagination.current = param.page;
-      pagination.total = data.content.total;
+      pagination.value.current = param.page;
+      pagination.value.total = data.content.total;
     } else {
       notification.error({description: data.message});
     }
@@ -121,7 +115,7 @@ const handleTableChange = (page) => {
 };
 
 
-onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
+onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize})});
 </script>
 
 <template>

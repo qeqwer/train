@@ -16,7 +16,15 @@ const passenger = reactive({
   updateTime: undefined,
 });
 
+// 分页的三个属性名是固定的
+const pagination = reactive({
+  total: 0,
+  current: 1,
+  pageSize: 3,
+});
+
 const passengerlist = ref([]);
+// let passengerlist = reactive({list:[]});
 
 const columns = [
   {
@@ -71,13 +79,24 @@ const handleQuery = (param) => {
     let data = res.data;
     if (data.success) {
       passengerlist.value = data.content.list;
+      // 设置分页控件的值
+      pagination.current = param.page;
+      pagination.total = data.content.total;
     } else {
       notification.error({description: data.message});
     }
   })
 };
 
-onMounted(() =>{handleQuery({page: 1, size: 3})});
+const handleTableChange = (page) => {
+  console.log("看看自带的分页参数都有啥：" + JSON.stringify(page));
+  handleQuery({
+    page: page.current,
+    size: page.pageSize
+  });
+};
+
+onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
 </script>
 
 <template>
@@ -85,7 +104,7 @@ onMounted(() =>{handleQuery({page: 1, size: 3})});
     <p>
       <a-button type="primary" @click="showModal">新增</a-button>
     </p>
-    <a-table :dataSource="passengerlist" :columns="columns" />
+    <a-table :dataSource="passengerlist" :columns="columns" :pagination="pagination" @change="handleTableChange"/>
     <a-modal v-model:open="open" title="乘车人" @ok="handleOk"
     okText="确认" cancelText="取消">
      <a-form  :model="passenger" :label-col="{span: 4}" :wrapper-col="{span: 14}">

@@ -55,11 +55,12 @@ const columns = [
 ];
 
 const onADD = () => {
+  passenger.value = {};
   open.value = true;
 };
 
 const onEdit = (record) => {
-  passenger.value = record;
+  passenger.value = window.Tool.copy(record);
   open.value = true;
 };
 

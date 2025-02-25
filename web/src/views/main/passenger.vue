@@ -70,6 +70,12 @@ const handleOk = () => {
 };
 
 const handleQuery = (param) => {
+  if(!param){
+    param={
+      page: 1,
+      size: pagination.pageSize
+    };
+  }
   axios.get('/member/passenger/query-list',{
     params: {
       page: param.page,
@@ -102,7 +108,10 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.pageSize})});
 <template>
   <div>
     <p>
-      <a-button type="primary" @click="showModal">新增</a-button>
+      <a-space>
+        <a-button type="primary" @click="handleQuery()">刷新</a-button>
+        <a-button type="primary" @click="showModal">新增</a-button>
+      </a-space>
     </p>
     <a-table :dataSource="passengerlist" :columns="columns" :pagination="pagination" @change="handleTableChange"/>
     <a-modal v-model:open="open" title="乘车人" @ok="handleOk"

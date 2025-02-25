@@ -1,6 +1,8 @@
 package com.niko.train.member.req;
 
-public class PassengerQueryReq {
+import com.niko.train.common.req.PageReq;
+
+public class PassengerQueryReq extends PageReq {
 
     private Long memberId;
 

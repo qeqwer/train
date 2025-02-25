@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, ref} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 
@@ -16,6 +16,35 @@ const passenger = reactive({
   updateTime: undefined,
 });
 
+const passengerlist = ref([]);
+
+const columns = [
+  {
+    title: '会员id',
+    dataIndex: 'memberId',
+    key: 'memberId',
+  },
+  {
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: '身份证',
+    dataIndex: 'idCard',
+    key: 'idCard',
+  },
+  {
+    title: '旅客类型',
+    dataIndex: 'type',
+    key: 'type',
+  },
+  {
+    title: '操作',
+    dataIndex: 'operation'
+  }
+];
+
 const showModal = () => {
   open.value = true;
 };
@@ -31,11 +60,32 @@ const handleOk = () => {
     }
   })
 };
+
+const handleQuery = (param) => {
+  axios.get('/member/passenger/query-list',{
+    params: {
+      page: param.page,
+      size: param.size,
+    }
+  }).then((res) => {
+    let data = res.data;
+    if (data.success) {
+      passengerlist.value = data.content.list;
+    } else {
+      notification.error({description: data.message});
+    }
+  })
+};
+
+onMounted(() =>{handleQuery({page: 1, size: 3})});
 </script>
 
 <template>
   <div>
-    <a-button type="primary" @click="showModal">新增</a-button>
+    <p>
+      <a-button type="primary" @click="showModal">新增</a-button>
+    </p>
+    <a-table :dataSource="passengerlist" :columns="columns" />
     <a-modal v-model:open="open" title="乘车人" @ok="handleOk"
     okText="确认" cancelText="取消">
      <a-form  :model="passenger" :label-col="{span: 4}" :wrapper-col="{span: 14}">
@@ -55,6 +105,7 @@ const handleOk = () => {
      </a-form>
     </a-modal>
   </div>
+
 </template>
 
 <style scoped>

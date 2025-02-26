@@ -54,32 +54,6 @@ const columns = [
   }
 ];
 
-const onADD = () => {
-  passenger.value = {};
-  open.value = true;
-};
-
-const onEdit = (record) => {
-  passenger.value = window.Tool.copy(record);
-  open.value = true;
-};
-
-const handleOk = () => {
-  axios.post('/member/passenger/save', passenger.value).then(res => {
-    let data = res.data;
-    if (data.success) {
-      notification.success({description: '保存成功！'});
-      open.value = false;
-      handleQuery({
-        page: pagination.value.current,
-        size: pagination.value.pageSize
-      })
-    } else {
-      notification.error({description: data.message});
-    }
-  })
-};
-
 const handleQuery = (param) => {
   if(!param){
     param={
@@ -107,11 +81,52 @@ const handleQuery = (param) => {
   })
 };
 
+const handleOk = () => {
+  axios.post('/member/passenger/save', passenger.value).then(res => {
+    let data = res.data;
+    if (data.success) {
+      notification.success({description: '保存成功！'});
+      open.value = false;
+      handleQuery({
+        page: pagination.value.current,
+        size: pagination.value.pageSize
+      })
+    } else {
+      notification.error({description: data.message});
+    }
+  })
+};
+
 const handleTableChange = (page) => {
   console.log("看看自带的分页参数都有啥：" + JSON.stringify(page));
   handleQuery({
     page: page.current,
     size: page.pageSize
+  });
+};
+
+const onADD = () => {
+  passenger.value = {};
+  open.value = true;
+};
+
+const onEdit = (record) => {
+  passenger.value = window.Tool.copy(record);
+  open.value = true;
+};
+
+const onDelete = (record) => {
+  axios.delete('/member/passenger/delete/' + record.id).then(res => {
+    let data = res.data;
+    if(data.success){
+      notification.success({description: '删除成功！'});
+      handleQuery({
+        page: pagination.value.current,
+        size: pagination.value.pageSize
+      });
+    } else {
+      notification.error({description: data.message});
+    }
   });
 };
 
@@ -136,6 +151,12 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize})});
       <template #bodyCell="{column, record}">
         <template v-if="column.dataIndex === 'operation'">
           <a-space>
+            <a-popconfirm
+                title="删除后不可恢复，确定删除吗？"
+                @confirm="onDelete(record)"
+                ok-text="确认" cancel-text="取消">
+              <a style="color: red">删除</a>
+            </a-popconfirm>
             <a @click="onEdit(record)">编辑</a>
           </a-space>
         </template>

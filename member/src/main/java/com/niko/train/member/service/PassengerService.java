@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 public class PassengerService {
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(PassengerService.class);
     @Resource
     private PassengerMapper passengerMapper;

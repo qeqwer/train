@@ -17,8 +17,6 @@ import TheSider from "@/components/the-sider.vue";
   </a-layout>
 </template>
 
-<style scoped>
-.site-layout-background {
-  background: #fff;
-}
+<style>
+
 </style>

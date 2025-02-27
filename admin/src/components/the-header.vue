@@ -15,7 +15,11 @@ watch(()=> router.currentRoute.value.path, (value)=> {
 
 <template>
   <a-layout-header class="header">
-    <div class="logo"/>
+    <div class="logo">
+      <router-link to="/welcome">
+        12306控制台
+      </router-link>
+    </div>
     <div style="float: right; color: white;">
       欢迎使用控台管理
     </div>
@@ -40,16 +44,11 @@ watch(()=> router.currentRoute.value.path, (value)=> {
 </template>
 
 <style scoped>
-#components-layout-demo-top-side-2 .logo {
+.logo {
   float: left;
-  width: 120px;
+  width: 150px;
   height: 31px;
-  margin: 16px 24px 16px 0;
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.ant-row-rtl #components-layout-demo-top-side-2 .logo {
-  float: right;
-  margin: 16px 0 16px 24px;
+  color: white;
+  font-size: 20px;
 }
 </style>

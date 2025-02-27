@@ -1,4 +1,4 @@
-package com.niko.train.generator.server;
+package com.niko.train.generator.gen;
 
 import com.niko.train.generator.util.DbUtil;
 import com.niko.train.generator.util.Field;

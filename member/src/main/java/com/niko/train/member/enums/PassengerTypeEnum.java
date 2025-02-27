@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-public enum PassengerTypeEnums {
+public enum PassengerTypeEnum {
 
     ADULT("1", "成人"),
     CHILD("2", "儿童"),
@@ -15,7 +15,7 @@ public enum PassengerTypeEnums {
 
     private String desc;
 
-    PassengerTypeEnums(String code, String desc) {
+    PassengerTypeEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -38,7 +38,7 @@ public enum PassengerTypeEnums {
 
     public static List<HashMap<String,String>> getEnumList() {
         List<HashMap<String, String>> list = new ArrayList<>();
-        for (PassengerTypeEnums anEnum : EnumSet.allOf(PassengerTypeEnums.class)) {
+        for (PassengerTypeEnum anEnum : EnumSet.allOf(PassengerTypeEnum.class)) {
             HashMap<String, String> map = new HashMap<>();
             map.put("code",anEnum.code);
             map.put("desc",anEnum.desc);

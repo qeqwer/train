@@ -1,12 +1,12 @@
-package com.niko.train.member.controller;
+package com.niko.train.${module}.controller;
 
 import com.niko.train.common.context.LoginMemberContext;
 import com.niko.train.common.resp.CommonResp;
 import com.niko.train.common.resp.PageResp;
-import com.niko.train.member.req.${Domain}QueryReq;
-import com.niko.train.member.req.${Domain}SaveReq;
-import com.niko.train.member.resp.${Domain}QueryResp;
-import com.niko.train.member.service.${Domain}Service;
+import com.niko.train.${module}.req.${Domain}QueryReq;
+import com.niko.train.${module}.req.${Domain}SaveReq;
+import com.niko.train.${module}.resp.${Domain}QueryResp;
+import com.niko.train.${module}.service.${Domain}Service;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

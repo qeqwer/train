@@ -44,6 +44,11 @@ watch(()=> router.currentRoute.value.path, (value)=> {
           <user-outlined/> &nbsp; 火车车站管理
         </router-link>
       </a-menu-item>
+      <a-menu-item key="/train-carriage">
+        <router-link to="/train-carriage">
+          <user-outlined/> &nbsp; 火车车厢管理
+        </router-link>
+      </a-menu-item>
     </a-menu>
   </a-layout-sider>
 </template>

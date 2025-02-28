@@ -2,6 +2,7 @@ package com.niko.train.business.config;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,7 +10,7 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @ComponentScan("com.niko")
-//@MapperScan("com.niko.train.*.mapper")
+@MapperScan("com.niko.train.*.mapper")
 public class BusinessApplication {
 	private static final Logger Log = LogManager.getLogger(BusinessApplication.class);
 

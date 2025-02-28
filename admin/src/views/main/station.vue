@@ -1,7 +1,8 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import {pinyin} from "pinyin-pro";
 
 const open = ref(false);
 const loading = ref(false);
@@ -46,6 +47,15 @@ const columns = [
     dataIndex: 'operation'
   }
 ];
+
+watch(()=>station.value.name, ()=>{
+  if(Tool.isNotEmpty(station.value.name)){
+    station.value.namePinyin = pinyin(station.value.name,{toneType:'none'})
+        .replace(" ", "");
+    station.value.namePy = pinyin(station.value.name,{pattern: "first",toneType:'none'})
+        .replace(" ", "");
+  }
+})
 
 const handleQuery = (param) => {
   if(!param){
@@ -159,10 +169,10 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
         <a-input v-model:value="station.name"/>
       </a-form-item>
       <a-form-item label="站名拼音">
-        <a-input v-model:value="station.namePinyin"/>
+        <a-input v-model:value="station.namePinyin" disabled/>
       </a-form-item>
-      <a-form-item label="站名拼音首字母">
-        <a-input v-model:value="station.namePy"/>
+      <a-form-item label="拼音首字母">
+        <a-input v-model:value="station.namePy" disabled/>
       </a-form-item>
     </a-form>
   </a-modal>

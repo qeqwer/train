@@ -1,7 +1,8 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import {pinyin} from "pinyin-pro";
 
 const open = ref(false);
 const loading = ref(false);
@@ -76,6 +77,15 @@ const columns = [
     dataIndex: 'operation'
   }
 ];
+
+watch(()=>trainStation.value.name, ()=>{
+  if(Tool.isNotEmpty(trainStation.value.name)){
+    trainStation.value.namePinyin = pinyin(trainStation.value.name,{toneType:'none'})
+        .replace(" ", "");
+  } else {
+    trainStation.value.namePinyin = "";
+  }
+}, {immediate: true});
 
 const handleQuery = (param) => {
   if(!param){
@@ -195,7 +205,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
         <a-input v-model:value="trainStation.name"/>
       </a-form-item>
       <a-form-item label="站名拼音">
-        <a-input v-model:value="trainStation.namePinyin"/>
+        <a-input v-model:value="trainStation.namePinyin" disabled/>
       </a-form-item>
       <a-form-item label="进站时间">
         <a-time-picker v-model:value="trainStation.inTime" valueFormat="HH:mm:ss" placeholder="请选择时间"/>

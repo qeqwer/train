@@ -1,7 +1,8 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import {pinyin} from "pinyin-pro";
 
 const open = ref(false);
 const loading = ref(false);
@@ -77,6 +78,24 @@ const columns = [
     dataIndex: 'operation'
   }
 ];
+
+watch(()=>train.value.start, ()=>{
+  if(Tool.isNotEmpty(train.value.start)){
+    train.value.startPinyin = pinyin(train.value.start,{toneType:'none'})
+        .replace(" ", "");
+  } else {
+    train.value.startPinyin = ""
+  }
+}, {immediate: true});
+
+watch(()=>train.value.end, ()=>{
+  if(Tool.isNotEmpty(train.value.end)){
+    train.value.endPinyin = pinyin(train.value.end,{toneType:'none'})
+        .replace(" ", "");
+  } else {
+    train.value.endPinyin = ""
+  }
+}, {immediate: true});
 
 const handleQuery = (param) => {
   if(!param){
@@ -207,7 +226,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
         <a-input v-model:value="train.start"/>
       </a-form-item>
       <a-form-item label="始发站拼音">
-        <a-input v-model:value="train.startPinyin"/>
+        <a-input v-model:value="train.startPinyin" disabled/>
       </a-form-item>
       <a-form-item label="出发时间">
         <a-time-picker v-model:value="train.startTime" valueFormat="HH:mm:ss" placeholder="请选择时间"/>
@@ -216,7 +235,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
         <a-input v-model:value="train.end"/>
       </a-form-item>
       <a-form-item label="终点站拼音">
-        <a-input v-model:value="train.endPinyin"/>
+        <a-input v-model:value="train.endPinyin" disabled/>
       </a-form-item>
       <a-form-item label="到站时间">
         <a-time-picker v-model:value="train.endTime" valueFormat="HH:mm:ss" placeholder="请选择时间"/>

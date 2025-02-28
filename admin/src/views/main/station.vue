@@ -54,8 +54,11 @@ watch(()=>station.value.name, ()=>{
         .replace(" ", "");
     station.value.namePy = pinyin(station.value.name,{pattern: "first",toneType:'none'})
         .replace(" ", "");
+  } else {
+    station.value.namePinyin = "";
+    station.value.namePy = "";
   }
-})
+}, {immediate: true});
 
 const handleQuery = (param) => {
   if(!param){

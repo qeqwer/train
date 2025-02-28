@@ -23,7 +23,7 @@
             <artifactId>common</artifactId>
         </dependency>
 
-        <!--基础热部署-->
+        <!--集成热部署-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>

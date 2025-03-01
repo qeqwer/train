@@ -2,6 +2,7 @@
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import TrainSelectView from "@/components/train-select.vue";
 
 const open = ref(false);
 const loading = ref(false);
@@ -190,7 +191,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
            ok-text="确认" cancel-text="取消">
     <a-form :model="trainSeat" :label-col="{span: 4}" :wrapper-col="{span: 20}">
       <a-form-item label="车次编号">
-        <a-input v-model:value="trainSeat.trainCode"/>
+        <train-select-view v-model:value="trainSeat.trainCode"></train-select-view>
       </a-form-item>
       <a-form-item label="厢序">
         <a-input v-model:value="trainSeat.carriageIndex"/>

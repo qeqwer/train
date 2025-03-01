@@ -174,6 +174,19 @@ const handleOk = () => {
   });
 };
 
+const genSeat = (record) => {
+  loading.value = true;
+  axios.get('/business/admin/train/gen-seat/' + record.code).then(res => {
+    loading.value = false;
+    let data = res.data;
+    if (data.success) {
+      notification.success({description: '生成座位成功！'});
+    } else {
+      notification.error({description: data.message});
+    }
+  });
+}
+
 onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 </script>
 
@@ -199,6 +212,12 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
             <a style="color: red">删除</a>
           </a-popconfirm>
           <a @click="onEdit(record)">编辑</a>
+          <a-popconfirm
+              title="生成座位"
+              @confirm="genSeat(record)"
+              ok-text="确认" cancel-text="取消">
+            <a>生成座位</a>
+          </a-popconfirm>
         </a-space>
       </template>
       <template v-else-if="column.dataIndex === 'type'">

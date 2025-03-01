@@ -8,6 +8,9 @@ const open = ref(false);
 const loading = ref(false);
 const SEAT_COL_ARRAY = window.SEAT_COL_ARRAY;
 const SEAT_TYPE_ARRAY = window.SEAT_TYPE_ARRAY;
+let params = ref({
+  trainCode: null
+})
 
 const trainSeat = ref({
   id: undefined,
@@ -80,6 +83,7 @@ const handleQuery = (param) => {
     params: {
       page: param.page,
       size: param.size,
+      trainCode: params.value.trainCode
     }
   }).then((res) => {
     loading.value = false;
@@ -150,7 +154,8 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 <template>
   <p>
     <a-space>
-      <a-button type="primary" @click="handleQuery()">刷新</a-button>
+      <train-select-view v-model:value="params.trainCode" width="200px"/>
+      <a-button type="primary" @click="handleQuery()">查询</a-button>
       <a-button type="primary" @click="onAdd">新增</a-button>
     </a-space>
   </p>

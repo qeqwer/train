@@ -9,7 +9,7 @@ import StationSelect from "@/components/station-select.vue";
 const open = ref(false);
 const loading = ref(false);
 let params = ref({
-  trainCode: "",
+  trainCode: null
 })
 
 const trainStation = ref({

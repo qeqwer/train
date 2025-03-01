@@ -4,6 +4,7 @@ import axios from "axios";
 import {notification} from "ant-design-vue";
 import {pinyin} from "pinyin-pro";
 import TrainSelectView from "@/components/train-select.vue";
+import StationSelect from "@/components/station-select.vue";
 
 const open = ref(false);
 const loading = ref(false);
@@ -205,7 +206,7 @@ onMounted(() =>{
         <a-input v-model:value="trainStation.index"/>
       </a-form-item>
       <a-form-item label="站名">
-        <a-input v-model:value="trainStation.name"/>
+        <station-select v-model:value="trainStation.name"/>
       </a-form-item>
       <a-form-item label="站名拼音">
         <a-input v-model:value="trainStation.namePinyin" disabled/>

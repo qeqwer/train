@@ -3,6 +3,7 @@ import {onMounted, ref, watch} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 import {pinyin} from "pinyin-pro";
+import StationSelect from "@/components/station-select.vue";
 
 const open = ref(false);
 const loading = ref(false);
@@ -223,7 +224,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
         </a-select>
       </a-form-item>
       <a-form-item label="始发站">
-        <a-input v-model:value="train.start"/>
+        <station-select v-model:value="train.start"/>
       </a-form-item>
       <a-form-item label="始发站拼音">
         <a-input v-model:value="train.startPinyin" disabled/>
@@ -232,7 +233,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
         <a-time-picker v-model:value="train.startTime" valueFormat="HH:mm:ss" placeholder="请选择时间"/>
       </a-form-item>
       <a-form-item label="终点站">
-        <a-input v-model:value="train.end"/>
+        <station-select v-model:value="train.end"/>
       </a-form-item>
       <a-form-item label="终点站拼音">
         <a-input v-model:value="train.endPinyin" disabled/>

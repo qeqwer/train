@@ -8,6 +8,9 @@ import StationSelect from "@/components/station-select.vue";
 
 const open = ref(false);
 const loading = ref(false);
+let params = ref({
+  trainCode: "",
+})
 
 const trainStation = ref({
   id: undefined,
@@ -101,6 +104,7 @@ const handleQuery = (param) => {
     params: {
       page: param.page,
       size: param.size,
+      trainCode: params.value.trainCode,
     }
   }).then((res) => {
     loading.value = false;
@@ -173,7 +177,8 @@ onMounted(() =>{
 <template>
   <p>
     <a-space>
-      <a-button type="primary" @click="handleQuery()">刷新</a-button>
+      <train-select-view v-model:value="params.trainCode" width="200px"></train-select-view>
+      <a-button type="primary" @click="handleQuery()">查找</a-button>
       <a-button type="primary" @click="onAdd">新增</a-button>
     </a-space>
   </p>

@@ -1,6 +1,7 @@
 package com.niko.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -33,12 +34,8 @@ public class StationService {
         Station station = BeanUtil.copyProperties(req, Station.class);
         DateTime now = DateTime.now();
         if(ObjectUtil.isNull(req.getId())){
-            // 保存之前，校验唯一性
-            StationExample stationExample = new StationExample();
-            StationExample.Criteria criteria = stationExample.createCriteria();
-            criteria.andNameEqualTo(req.getName());
-            List<Station> list = stationMapper.selectByExample(stationExample);
-            if(ObjectUtil.isNotEmpty(list)){
+            Station stationDB = selectByUnique(req.getName());
+            if(ObjectUtil.isNotEmpty(stationDB)){
                 throw new BusinessException(BussinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
             }
 
@@ -49,6 +46,19 @@ public class StationService {
         } else {
             station.setUpdateTime(now);
             stationMapper.updateByPrimaryKey(station);
+        }
+    }
+
+    private Station selectByUnique(String name) {
+        // 保存之前，校验唯一性
+        StationExample stationExample = new StationExample();
+        StationExample.Criteria criteria = stationExample.createCriteria();
+        criteria.andNameEqualTo(name);
+        List<Station> list = stationMapper.selectByExample(stationExample);
+        if(CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        } else {
+            return null;
         }
     }
 

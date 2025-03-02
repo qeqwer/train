@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.niko.train.business.domain.TrainCarriage;
 import com.niko.train.business.domain.TrainCarriageExample;
+import com.niko.train.business.enums.SeatColEnum;
 import com.niko.train.business.mapper.TrainCarriageMapper;
 import com.niko.train.business.req.TrainCarriageQueryReq;
 import com.niko.train.business.req.TrainCarriageSaveReq;
@@ -28,8 +29,15 @@ public class TrainCarriageService {
     private TrainCarriageMapper trainCarriageMapper;
 
     public void save(TrainCarriageSaveReq req) {
-        TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
         DateTime now = DateTime.now();
+
+        // 自动计算列数和总座位数
+        List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(req.getSeatType());
+        req.setColCount(seatColEnums.size());
+        req.setSeatCount(req.getRowCount() * req.getColCount());
+
+        TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
+
         if(ObjectUtil.isNull(req.getId())){
             trainCarriage.setId(SnowUtil.getSnowflakeNextId());
             trainCarriage.setCreateTime(now);

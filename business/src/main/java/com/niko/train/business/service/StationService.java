@@ -11,6 +11,8 @@ import com.niko.train.business.mapper.StationMapper;
 import com.niko.train.business.req.StationQueryReq;
 import com.niko.train.business.req.StationSaveReq;
 import com.niko.train.business.resp.StationQueryResp;
+import com.niko.train.common.exception.BusinessException;
+import com.niko.train.common.exception.BussinessExceptionEnum;
 import com.niko.train.common.resp.PageResp;
 import com.niko.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
@@ -31,6 +33,15 @@ public class StationService {
         Station station = BeanUtil.copyProperties(req, Station.class);
         DateTime now = DateTime.now();
         if(ObjectUtil.isNull(req.getId())){
+            // 保存之前，校验唯一性
+            StationExample stationExample = new StationExample();
+            StationExample.Criteria criteria = stationExample.createCriteria();
+            criteria.andNameEqualTo(req.getName());
+            List<Station> list = stationMapper.selectByExample(stationExample);
+            if(ObjectUtil.isNotEmpty(list)){
+                throw new BusinessException(BussinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
+            }
+
             station.setId(SnowUtil.getSnowflakeNextId());
             station.setCreateTime(now);
             station.setUpdateTime(now);

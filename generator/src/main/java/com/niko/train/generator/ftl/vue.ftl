@@ -3,7 +3,9 @@ import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 
+<#if !readOnly>
 const open = ref(false);
+</#if>
 const loading = ref(false);
 <#list fieldList as field>
 <#if field.enums>
@@ -11,11 +13,13 @@ const ${field.enumsConst}_ARRAY = window.${field.enumsConst}_ARRAY;
 </#if>
 </#list>
 
+<#if !readOnly>
 const ${domain} = ref({
 <#list fieldList as field>
   ${field.nameHump}: undefined,
 </#list>
 });
+</#if>
 
 // 分页的三个属性名是固定的
 const pagination = ref({

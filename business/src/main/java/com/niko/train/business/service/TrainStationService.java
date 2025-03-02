@@ -1,18 +1,21 @@
 package com.niko.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.common.resp.PageResp;
-import com.niko.train.common.util.SnowUtil;
 import com.niko.train.business.domain.TrainStation;
 import com.niko.train.business.domain.TrainStationExample;
 import com.niko.train.business.mapper.TrainStationMapper;
 import com.niko.train.business.req.TrainStationQueryReq;
 import com.niko.train.business.req.TrainStationSaveReq;
 import com.niko.train.business.resp.TrainStationQueryResp;
+import com.niko.train.common.exception.BusinessException;
+import com.niko.train.common.exception.BussinessExceptionEnum;
+import com.niko.train.common.resp.PageResp;
+import com.niko.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,16 @@ public class TrainStationService {
         TrainStation trainStation = BeanUtil.copyProperties(req, TrainStation.class);
         DateTime now = DateTime.now();
         if(ObjectUtil.isNull(req.getId())){
+            // 唯一校验
+            TrainStation trainStationDB = selectByUnique(req.getTrainCode(), req.getIndex());
+            if(ObjectUtil.isNotNull(trainStationDB)){
+                throw new BusinessException(BussinessExceptionEnum.BUSINESS_TRAIN_STATION_INDEX_UNIQUE_ERROR);
+            }
+            // 唯一校验
+             trainStationDB = selectByUnique(req.getTrainCode(), req.getName());
+            if(ObjectUtil.isNotNull(trainStationDB)){
+                throw new BusinessException(BussinessExceptionEnum.BUSINESS_TRAIN_STATION_NAME_UNIQUE_ERROR);
+            }
             trainStation.setId(SnowUtil.getSnowflakeNextId());
             trainStation.setCreateTime(now);
             trainStation.setUpdateTime(now);
@@ -38,6 +51,32 @@ public class TrainStationService {
         } else {
             trainStation.setUpdateTime(now);
             trainStationMapper.updateByPrimaryKey(trainStation);
+        }
+    }
+
+    private TrainStation selectByUnique(String trainCode, Integer index) {
+        // 保存之前，校验唯一性
+        TrainStationExample trainCarriageExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = trainCarriageExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode).andIndexEqualTo(index);
+        List<TrainStation> list = trainStationMapper.selectByExample(trainCarriageExample);
+        if(CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    private TrainStation selectByUnique(String trainCode, String name) {
+        // 保存之前，校验唯一性
+        TrainStationExample trainCarriageExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = trainCarriageExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode).andNameEqualTo(name);
+        List<TrainStation> list = trainStationMapper.selectByExample(trainCarriageExample);
+        if(CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        } else {
+            return null;
         }
     }
 

@@ -1,18 +1,21 @@
 package com.niko.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.common.resp.PageResp;
-import com.niko.train.common.util.SnowUtil;
 import com.niko.train.business.domain.Train;
 import com.niko.train.business.domain.TrainExample;
 import com.niko.train.business.mapper.TrainMapper;
 import com.niko.train.business.req.TrainQueryReq;
 import com.niko.train.business.req.TrainSaveReq;
 import com.niko.train.business.resp.TrainQueryResp;
+import com.niko.train.common.exception.BusinessException;
+import com.niko.train.common.exception.BussinessExceptionEnum;
+import com.niko.train.common.resp.PageResp;
+import com.niko.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,11 @@ public class TrainService {
         Train train = BeanUtil.copyProperties(req, Train.class);
         DateTime now = DateTime.now();
         if(ObjectUtil.isNull(req.getId())){
+            // 唯一校验
+            Train trainDB = selectByUnique(train.getCode());
+            if(ObjectUtil.isNotNull(trainDB)){
+                throw new BusinessException(BussinessExceptionEnum.BUSINESS_TRAIN_CODE_UNIQUE_ERROR);
+            }
             train.setId(SnowUtil.getSnowflakeNextId());
             train.setCreateTime(now);
             train.setUpdateTime(now);
@@ -38,6 +46,19 @@ public class TrainService {
         } else {
             train.setUpdateTime(now);
             trainMapper.updateByPrimaryKey(train);
+        }
+    }
+
+    private Train selectByUnique(String trainCode) {
+        // 保存之前，校验唯一性
+        TrainExample trainCarriageExample = new TrainExample();
+        TrainExample.Criteria criteria = trainCarriageExample.createCriteria();
+        criteria.andCodeEqualTo(trainCode);
+        List<Train> list = trainMapper.selectByExample(trainCarriageExample);
+        if(CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        } else {
+            return null;
         }
     }
 

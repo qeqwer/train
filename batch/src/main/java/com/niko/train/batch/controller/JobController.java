@@ -28,6 +28,7 @@ public class JobController {
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
 
+    //异步任务，触发器触发时调用该方法，不影响原来定时任务
     @RequestMapping(value = "/run")
     public CommonResp<Object> run(@RequestBody CronJobReq cronJobReq) throws SchedulerException {
         String jobClassName = cronJobReq.getName();

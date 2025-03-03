@@ -16,7 +16,7 @@ watch(()=> router.currentRoute.value.path, (value)=> {
   <a-layout-sider width="200" style="background: #fff">
     <a-menu
         v-model:selectedKeys="selectedKeys"
-        :openKeys="['batch','base']"
+        :openKeys="['batch','base','business']"
         mode="inline"
         :style="{ height: '100%', borderRight: 0 }"
     >
@@ -42,6 +42,34 @@ watch(()=> router.currentRoute.value.path, (value)=> {
           <MenuUnfoldOutlined/> &nbsp; 定时任务
         </router-link>
       </a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="business">
+        <template #title>
+          <span>
+            <UnorderedOutlined/>
+            业务管理
+          </span>
+        </template>
+        <a-menu-item key="/business/train">
+          <router-link to="/business/train">
+            <user-outlined/> &nbsp; 每日车次
+          </router-link>
+        </a-menu-item>
+        <!--        <a-menu-item key="/business/train-station">-->
+        <!--          <router-link to="/business/train-station">-->
+        <!--            <user-outlined/> &nbsp; 火车车站-->
+        <!--          </router-link>-->
+        <!--        </a-menu-item>-->
+        <!--        <a-menu-item key="/business/train-carriage">-->
+        <!--          <router-link to="/business/train-carriage">-->
+        <!--            <user-outlined/> &nbsp; 火车车厢-->
+        <!--          </router-link>-->
+        <!--        </a-menu-item>-->
+        <!--        <a-menu-item key="/business/train-seat">-->
+        <!--          <router-link to="/business/train-seat">-->
+        <!--            <user-outlined/> &nbsp; 火车座位-->
+        <!--          </router-link>-->
+        <!--        </a-menu-item>-->
       </a-sub-menu>
       <a-sub-menu key="base">
         <template #title>

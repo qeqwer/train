@@ -62,7 +62,7 @@ POST http://localhost:8000/batch/admin/job/run
 Content-Type: application/json
 
 {
-  "name": "com.niko.train.batch.job.TestJob",
+  "name": "com.niko.train.batch.job.DailyTrainJob",
   "jobGroupName": "default"
 }
 

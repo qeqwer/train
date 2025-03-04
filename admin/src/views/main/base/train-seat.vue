@@ -9,7 +9,7 @@ const SEAT_COL_ARRAY = window.SEAT_COL_ARRAY;
 const SEAT_TYPE_ARRAY = window.SEAT_TYPE_ARRAY;
 let params = ref({
   trainCode: null
-})
+});
 
 
 // 分页的三个属性名是固定的

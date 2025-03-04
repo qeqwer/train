@@ -2,17 +2,21 @@
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import TrainSelect from "@/components/train-select.vue";
 
 const loading = ref(false);
 const SEAT_COL_ARRAY = window.SEAT_COL_ARRAY;
 const SEAT_TYPE_ARRAY = window.SEAT_TYPE_ARRAY;
+let params = ref({
+  trainCode: null
+});
 
 
 // 分页的三个属性名是固定的
 const pagination = ref({
   total: 0,
   current: 1,
-  pageSize: 3,
+  pageSize: 10,
 });
 
 const dailyTrainSeatlist = ref([]);
@@ -30,7 +34,7 @@ const columns = [
     key: 'trainCode',
   },
   {
-    title: '箱序',
+    title: '厢序',
     dataIndex: 'carriageIndex',
     key: 'carriageIndex',
   },
@@ -50,7 +54,7 @@ const columns = [
     key: 'seatType',
   },
   {
-    title: '同车箱座序',
+    title: '同车厢座序',
     dataIndex: 'carriageSeatIndex',
     key: 'carriageSeatIndex',
   },
@@ -73,6 +77,7 @@ const handleQuery = (param) => {
     params: {
       page: param.page,
       size: param.size,
+      trainCode: params.value.trainCode
     }
   }).then((res) => {
     loading.value = false;
@@ -103,8 +108,8 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 <template>
   <p>
     <a-space>
-      <a-button type="primary" @click="handleQuery()">刷新</a-button>
-      
+      <train-select v-model="params.trainCode" width="200px"/>
+      <a-button type="primary" @click="handleQuery()">查询</a-button>
     </a-space>
   </p>
   <a-table :dataSource="dailyTrainSeatlist"
@@ -117,7 +122,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
       </template>
       <template v-else-if="column.dataIndex === 'col'">
         <span v-for="item in SEAT_COL_ARRAY" :key="item.code">
-          <span v-if="item.code === record.col">
+          <span v-if="item.code === record.col && item.type === record.seatType">
             {{item.desc}}
           </span>
         </span>

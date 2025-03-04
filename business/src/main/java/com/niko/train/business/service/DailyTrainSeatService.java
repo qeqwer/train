@@ -5,14 +5,14 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.common.resp.PageResp;
-import com.niko.train.common.util.SnowUtil;
 import com.niko.train.business.domain.DailyTrainSeat;
 import com.niko.train.business.domain.DailyTrainSeatExample;
 import com.niko.train.business.mapper.DailyTrainSeatMapper;
 import com.niko.train.business.req.DailyTrainSeatQueryReq;
 import com.niko.train.business.req.DailyTrainSeatSaveReq;
 import com.niko.train.business.resp.DailyTrainSeatQueryResp;
+import com.niko.train.common.resp.PageResp;
+import com.niko.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +43,11 @@ public class DailyTrainSeatService {
 
     public PageResp<DailyTrainSeatQueryResp> queryList(DailyTrainSeatQueryReq req) {
         DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
-        // 降序
-        dailyTrainSeatExample.setOrderByClause("id desc");
+        dailyTrainSeatExample.setOrderByClause("train_code asc, carriage_index asc, carriage_seat_index asc");
         DailyTrainSeatExample.Criteria criteria = dailyTrainSeatExample.createCriteria();
+        if(ObjectUtil.isNotEmpty(req.getTrainCode())){
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        }
 
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());

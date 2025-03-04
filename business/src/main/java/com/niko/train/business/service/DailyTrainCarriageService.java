@@ -5,14 +5,15 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.common.resp.PageResp;
-import com.niko.train.common.util.SnowUtil;
 import com.niko.train.business.domain.DailyTrainCarriage;
 import com.niko.train.business.domain.DailyTrainCarriageExample;
+import com.niko.train.business.enums.SeatColEnum;
 import com.niko.train.business.mapper.DailyTrainCarriageMapper;
 import com.niko.train.business.req.DailyTrainCarriageQueryReq;
 import com.niko.train.business.req.DailyTrainCarriageSaveReq;
 import com.niko.train.business.resp.DailyTrainCarriageQueryResp;
+import com.niko.train.common.resp.PageResp;
+import com.niko.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,15 @@ public class DailyTrainCarriageService {
     private DailyTrainCarriageMapper dailyTrainCarriageMapper;
 
     public void save(DailyTrainCarriageSaveReq req) {
-        DailyTrainCarriage dailyTrainCarriage = BeanUtil.copyProperties(req, DailyTrainCarriage.class);
         DateTime now = DateTime.now();
+
+        // 自动计算列数和总座位数
+        List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(req.getSeatType());
+        req.setColCount(seatColEnums.size());
+        req.setSeatCount(req.getRowCount() * req.getColCount());
+
+        DailyTrainCarriage dailyTrainCarriage = BeanUtil.copyProperties(req, DailyTrainCarriage.class);
+
         if(ObjectUtil.isNull(req.getId())){
             dailyTrainCarriage.setId(SnowUtil.getSnowflakeNextId());
             dailyTrainCarriage.setCreateTime(now);
@@ -43,9 +51,14 @@ public class DailyTrainCarriageService {
 
     public PageResp<DailyTrainCarriageQueryResp> queryList(DailyTrainCarriageQueryReq req) {
         DailyTrainCarriageExample dailyTrainCarriageExample = new DailyTrainCarriageExample();
-        // 降序
-        dailyTrainCarriageExample.setOrderByClause("id desc");
+        dailyTrainCarriageExample.setOrderByClause("`date` desc, `train_code` asc, `index` asc");
         DailyTrainCarriageExample.Criteria criteria = dailyTrainCarriageExample.createCriteria();
+        if (ObjectUtil.isNotNull(req.getDate())){
+            criteria.andDateEqualTo(req.getDate());
+        }
+        if(ObjectUtil.isNotEmpty(req.getTrainCode())){
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        }
 
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());

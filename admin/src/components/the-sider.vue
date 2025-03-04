@@ -55,11 +55,11 @@ watch(()=> router.currentRoute.value.path, (value)=> {
             <user-outlined/> &nbsp; 每日车次
           </router-link>
         </a-menu-item>
-        <!--        <a-menu-item key="/business/train-station">-->
-        <!--          <router-link to="/business/train-station">-->
-        <!--            <user-outlined/> &nbsp; 火车车站-->
-        <!--          </router-link>-->
-        <!--        </a-menu-item>-->
+        <a-menu-item key="/business/train-station">
+          <router-link to="/business/train-station">
+            <user-outlined/> &nbsp; 每日车站
+          </router-link>
+        </a-menu-item>
         <!--        <a-menu-item key="/business/train-carriage">-->
         <!--          <router-link to="/business/train-carriage">-->
         <!--            <user-outlined/> &nbsp; 火车车厢-->

@@ -3,24 +3,10 @@ import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 
-const open = ref(false);
 const loading = ref(false);
 const SEAT_COL_ARRAY = window.SEAT_COL_ARRAY;
 const SEAT_TYPE_ARRAY = window.SEAT_TYPE_ARRAY;
 
-const dailyTrainSeat = ref({
-  id: undefined,
-  date: undefined,
-  trainCode: undefined,
-  carriageIndex: undefined,
-  row: undefined,
-  col: undefined,
-  seatType: undefined,
-  carriageSeatIndex: undefined,
-  sell: undefined,
-  createTime: undefined,
-  updateTime: undefined,
-});
 
 // 分页的三个属性名是固定的
 const pagination = ref({
@@ -73,10 +59,6 @@ const columns = [
     dataIndex: 'sell',
     key: 'sell',
   },
-  {
-    title: '操作',
-    dataIndex: 'operation'
-  }
 ];
 
 const handleQuery = (param) => {
@@ -114,46 +96,6 @@ const handleTableChange = (page) => {
   });
 };
 
-const onAdd = () => {
-  dailyTrainSeat.value = {};
-  open.value = true;
-};
-
-const onEdit = (record) => {
-  dailyTrainSeat.value = window.Tool.copy(record);
-  open.value = true;
-};
-
-const onDelete = (record) => {
-  axios.delete('/business/admin/daily-train-seat/delete/' + record.id).then(res => {
-    let data = res.data;
-    if(data.success){
-      notification.success({description: '删除成功！'});
-      handleQuery({
-        page: pagination.value.current,
-        size: pagination.value.pageSize,
-      });
-    } else {
-      notification.error({description: data.message});
-    }
-  });
-};
-
-const handleOk = () => {
-  axios.post('/business/admin/daily-train-seat/save', dailyTrainSeat.value).then(res => {
-    let data = res.data;
-    if (data.success) {
-      notification.success({description: '保存成功！'});
-      open.value = false;
-      handleQuery({
-        page: pagination.value.current,
-        size: pagination.value.pageSize
-      });
-    } else {
-      notification.error({description: data.message});
-    }
-  });
-};
 
 onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 </script>
@@ -162,7 +104,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
   <p>
     <a-space>
       <a-button type="primary" @click="handleQuery()">刷新</a-button>
-      <a-button type="primary" @click="onAdd">新增</a-button>
+      
     </a-space>
   </p>
   <a-table :dataSource="dailyTrainSeatlist"
@@ -172,15 +114,6 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
            :loading="loading">
     <template #bodyCell="{column, record}">
       <template v-if="column.dataIndex === 'operation'">
-        <a-space>
-          <a-popconfirm
-              title="删除后不可恢复，确认删除?"
-              @confirm="onDelete(record)"
-              ok-text="确认" cancel-text="取消">
-            <a style="color: red">删除</a>
-          </a-popconfirm>
-          <a @click="onEdit(record)">编辑</a>
-        </a-space>
       </template>
       <template v-else-if="column.dataIndex === 'col'">
         <span v-for="item in SEAT_COL_ARRAY" :key="item.code">
@@ -198,43 +131,6 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
       </template>
     </template>
   </a-table>
-  <a-modal v-model:open="open" title="每日座位" @ok="handleOk"
-           ok-text="确认" cancel-text="取消">
-    <a-form :model="dailyTrainSeat" :label-col="{span: 4}" :wrapper-col="{span: 20}">
-      <a-form-item label="日期">
-        <a-date-picker v-model:value="dailyTrainSeat.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期"/>
-      </a-form-item>
-      <a-form-item label="车次编号">
-        <a-input v-model:value="dailyTrainSeat.trainCode"/>
-      </a-form-item>
-      <a-form-item label="箱序">
-        <a-input v-model:value="dailyTrainSeat.carriageIndex"/>
-      </a-form-item>
-      <a-form-item label="排号">
-        <a-input v-model:value="dailyTrainSeat.row"/>
-      </a-form-item>
-      <a-form-item label="列号">
-        <a-select v-model:value="dailyTrainSeat.col">
-          <a-select-option v-for="item in SEAT_COL_ARRAY" :key="item.code" :value="item.code">
-            {{item.desc}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="座位类型">
-        <a-select v-model:value="dailyTrainSeat.seatType">
-          <a-select-option v-for="item in SEAT_TYPE_ARRAY" :key="item.code" :value="item.code">
-            {{item.desc}}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item label="同车箱座序">
-        <a-input v-model:value="dailyTrainSeat.carriageSeatIndex"/>
-      </a-form-item>
-      <a-form-item label="售卖情况">
-        <a-input v-model:value="dailyTrainSeat.sell"/>
-      </a-form-item>
-    </a-form>
-  </a-modal>
 </template>
 
 <style scoped>

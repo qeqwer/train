@@ -65,11 +65,11 @@ watch(()=> router.currentRoute.value.path, (value)=> {
             <user-outlined/> &nbsp; 每日车厢
           </router-link>
         </a-menu-item>
-        <!--        <a-menu-item key="/business/train-seat">-->
-        <!--          <router-link to="/business/train-seat">-->
-        <!--            <user-outlined/> &nbsp; 火车座位-->
-        <!--          </router-link>-->
-        <!--        </a-menu-item>-->
+        <a-menu-item key="/business/train-seat">
+          <router-link to="/business/train-seat">
+            <user-outlined/> &nbsp; 每日座位
+          </router-link>
+        </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="base">
         <template #title>

@@ -69,10 +69,10 @@ public class TrainStationService {
 
     private TrainStation selectByUnique(String trainCode, String name) {
         // 保存之前，校验唯一性
-        TrainStationExample trainCarriageExample = new TrainStationExample();
-        TrainStationExample.Criteria criteria = trainCarriageExample.createCriteria();
+        TrainStationExample trainStationExample = new TrainStationExample();
+        TrainStationExample.Criteria criteria = trainStationExample.createCriteria();
         criteria.andTrainCodeEqualTo(trainCode).andNameEqualTo(name);
-        List<TrainStation> list = trainStationMapper.selectByExample(trainCarriageExample);
+        List<TrainStation> list = trainStationMapper.selectByExample(trainStationExample);
         if(CollUtil.isNotEmpty(list)){
             return list.get(0);
         } else {
@@ -112,7 +112,12 @@ public class TrainStationService {
         trainStationMapper.deleteByPrimaryKey(id);
     }
 
-
-
+    public  List<TrainStation> selectByTrainCode(String trainCode) {
+        TrainStationExample trainCarriageExample = new TrainStationExample();
+        trainCarriageExample.setOrderByClause("`index` asc");
+        TrainStationExample.Criteria criteria = trainCarriageExample.createCriteria();
+        criteria.andTrainCodeEqualTo(trainCode);
+        return trainStationMapper.selectByExample(trainCarriageExample);
+    }
 
 }

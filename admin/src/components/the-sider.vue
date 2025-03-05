@@ -50,6 +50,11 @@ watch(()=> router.currentRoute.value.path, (value)=> {
             业务管理
           </span>
         </template>
+        <a-menu-item key="/business/daily-train-ticket">
+          <router-link to="/business/daily-train-ticket">
+            <user-outlined/> &nbsp; 余票信息
+          </router-link>
+        </a-menu-item>
         <a-menu-item key="/business/train">
           <router-link to="/business/train">
             <user-outlined/> &nbsp; 每日车次

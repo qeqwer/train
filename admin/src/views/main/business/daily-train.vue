@@ -3,6 +3,7 @@ import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
 import TrainSelect from "@/components/train-select.vue";
+import dayjs from "dayjs";
 
 const open = ref(false);
 const loading = ref(false);
@@ -11,6 +12,11 @@ let params = ref({
   code: null,
   date: null
 });
+const genDaily = ref({
+  date: null
+});
+const genDailyOpen = ref(false);
+const genDailyLoading = ref(false);
 
 const dailyTrain = ref({
   id: undefined,
@@ -120,6 +126,7 @@ const handleQuery = (param) => {
 
 const handleTableChange = (page) => {
   console.log("看看自带的分页参数都有啥：" + JSON.stringify(page));
+  pagination.value.pageSize = page.pageSize;
   handleQuery({
     page: page.current,
     size: page.pageSize
@@ -175,6 +182,28 @@ const onChangeCode = (train) => {
   dailyTrain.value = Object.assign(dailyTrain.value, t);
 };
 
+const onClickGenDaily = () => {
+  genDailyOpen.value = true;
+};
+
+const handleGenDailyOk = () => {
+  let date = dayjs(genDaily.value.date).format('YYYY-MM-DD');
+  axios.get('/business/admin/daily-train/gen-daily/' + date).then(res => {
+    let data = res.data;
+    if (data.success) {
+      notification.success({description: '生成成功！'});
+      genDailyOpen.value = false;
+      handleQuery({
+        page: pagination.value.current,
+        size: pagination.value.pageSize
+      });
+    } else{
+      notification.error({description: data.message});
+    }
+
+  });
+};
+
 onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 </script>
 
@@ -185,6 +214,7 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
       <train-select v-model="params.code" width="200px"/>
       <a-button type="primary" @click="handleQuery()">查询</a-button>
       <a-button type="primary" @click="onAdd">新增</a-button>
+      <a-button type="primary" danger @click="onClickGenDaily">手动生成车次信息</a-button>
     </a-space>
   </p>
   <a-table :dataSource="dailyTrainlist"
@@ -246,6 +276,14 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
       </a-form-item>
       <a-form-item label="到站时间">
         <a-time-picker v-model:value="dailyTrain.endTime" valueFormat="HH:mm:ss" placeholder="请选择时间"/>
+      </a-form-item>
+    </a-form>
+  </a-modal>
+  <a-modal v-model:open="genDailyOpen" title="生成车次" @ok="handleGenDailyOk"
+           :confirm-loading="genDailyLoading" ok-text="确认" cancel-text="取消">
+    <a-form :model="genDaily" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
+      <a-form-item label="日期">
+        <a-date-picker v-model:value="genDaily.date" placeholder="请选择日期"/>
       </a-form-item>
     </a-form>
   </a-modal>

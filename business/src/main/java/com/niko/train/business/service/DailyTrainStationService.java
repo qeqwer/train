@@ -98,7 +98,7 @@ public class DailyTrainStationService {
         // 查出某车次的所有站序数据
         List<TrainStation> trainStationList = trainStationService.selectByTrainCode(trainCode);
         if (CollUtil.isEmpty(trainStationList)) {
-            LOG.info("改车次没有车站基础数据，生成该车次的车站信息结束");
+            LOG.info("该车次没有车站基础数据，生成该车次的车站信息结束");
             return;
         }
 

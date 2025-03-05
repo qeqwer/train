@@ -103,7 +103,7 @@ public class DailyTrainStationService {
         }
 
         for (TrainStation trainStation : trainStationList) {
-            // 生成该车次的数据
+            // 生成该车次的车站数据
             DateTime now = DateTime.now();
 
             DailyTrainStation dailyTrainStation =  BeanUtil.copyProperties(trainStation, DailyTrainStation.class);

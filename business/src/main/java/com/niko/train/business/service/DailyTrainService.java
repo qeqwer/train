@@ -42,6 +42,8 @@ public class DailyTrainService {
     @Resource
     private DailyTrainCarriageService dailyTrainCarriageService;
 
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
 
     public void save(DailyTrainSaveReq req) {
         DailyTrain dailyTrain = BeanUtil.copyProperties(req, DailyTrain.class);
@@ -124,10 +126,10 @@ public class DailyTrainService {
 
         DailyTrain dailyTrain = BeanUtil.copyProperties(train, DailyTrain.class);
         dailyTrain.setId(SnowUtil.getSnowflakeNextId());
-
         dailyTrain.setCreateTime(now);
         dailyTrain.setUpdateTime(now);
         dailyTrain.setDate(date);
+
         dailyTrainMapper.insert(dailyTrain);
 
         // 生成该车次的车站数据
@@ -137,7 +139,7 @@ public class DailyTrainService {
         dailyTrainCarriageService.genDaily(date, train.getCode());
 
         // 生成该车次的座位数据
-//        dailyTrainSeatService.genDaily(date, train.getCode());
+        dailyTrainSeatService.genDaily(date, train.getCode());
 
         // 生成该车次的座位余票数据
 //        trainTicketService.genDaily(dailyTrain, date, train.getCode());

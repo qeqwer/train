@@ -33,7 +33,7 @@ const dailyTrainStation = ref({
 const pagination = ref({
   total: 0,
   current: 1,
-  pageSize: 3,
+  pageSize: 10,
 });
 
 const dailyTrainStationlist = ref([]);

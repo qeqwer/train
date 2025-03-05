@@ -108,7 +108,7 @@ public class DailyTrainCarriageService {
         }
 
         for (TrainCarriage trainCarriage : trainCarriageList) {
-            // 生成该车次的数据
+            // 生成该车次的车厢数据
             DateTime now = DateTime.now();
 
             DailyTrainCarriage dailyTrainCarriage =  BeanUtil.copyProperties(trainCarriage, DailyTrainCarriage.class);

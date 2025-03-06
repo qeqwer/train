@@ -147,7 +147,7 @@ public class DailyTrainService {
         dailyTrainSeatService.genDaily(date, train.getCode());
 
         // 生成该车次的座位余票数据
-        dailyrainTicketService.genDaily(date, train.getCode());
+        dailyrainTicketService.genDaily(dailyTrain, date, train.getCode());
 
 
         LOG.info("结束生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());

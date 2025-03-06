@@ -4,6 +4,7 @@ import axios from "axios";
 import {notification} from "ant-design-vue";
 import StationSelect from "@/components/station-select.vue";
 import dayjs from "dayjs";
+import router from "@/router";
 
 const loading = ref(false);
 const params = ref({
@@ -11,6 +12,28 @@ const params = ref({
   trainCode:null,
   start: null,
   end: null
+});
+
+const dailyTrainTicket = ref({
+  id: null,
+  trainCode: null,
+  start: null,
+  end: null,
+  startTime: null,
+  endTime: null,
+  seats: null,
+  index: null,
+  date: null,
+  trainTypeCode: null,
+  trainTypeName: null,
+  startIndex: null,
+  endIndex: null,
+  startTimeIndex: null,
+  endTimeIndex: null,
+  duration: null,
+  ydz: null,
+  edz: null,
+  rw: null,
 });
 
 
@@ -61,6 +84,10 @@ const columns = [
     title: '硬卧',
     dataIndex: 'yw',
     key: 'yw',
+  },
+  {
+    title: '操作',
+    dataIndex: 'operation',
   },
 ];
 
@@ -121,6 +148,11 @@ const calDuration = (startTime, endTime) => {
   return dayjs('00:00:00', 'HH:mm:ss').second(diff).format('HH:mm:ss');
 };
 
+const toOrder = (record) => {
+  dailyTrainTicket.value = Tool.copy(record);
+  SessionStorage.set("dailyTrainTicket", dailyTrainTicket.value);
+  router.push("/order");
+};
 
 onMounted(() =>{});
 </script>
@@ -141,6 +173,7 @@ onMounted(() =>{});
            :loading="loading">
     <template #bodyCell="{column, record}">
       <template v-if="column.dataIndex === 'operation'">
+        <a-button type="primary" @click="toOrder(record)">预定</a-button>
       </template>
       <template v-else-if="column.dataIndex === 'station'">
         {{record.start}}<br/>

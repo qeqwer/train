@@ -45,6 +45,9 @@ public class DailyTrainService {
     @Resource
     private DailyTrainSeatService dailyTrainSeatService;
 
+    @Resource
+    private DailyTrainTicketService dailyrainTicketService;
+
     public void save(DailyTrainSaveReq req) {
         DailyTrain dailyTrain = BeanUtil.copyProperties(req, DailyTrain.class);
         DateTime now = DateTime.now();
@@ -111,6 +114,8 @@ public class DailyTrainService {
         }
     }
 
+    //当在方法或类上使用**@Transactional**注解时，Spring会为该方法或类中的所有数据库操作创建一个事务。
+    // 这意味着这些操作要么全部成功，要么全部失败，从而保证了数据的一致性和完整性。
     @Transactional
     public void genDailyTrain(Date date, Train train) {
         LOG.info("开始生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());
@@ -142,7 +147,7 @@ public class DailyTrainService {
         dailyTrainSeatService.genDaily(date, train.getCode());
 
         // 生成该车次的座位余票数据
-//        trainTicketService.genDaily(dailyTrain, date, train.getCode());
+        dailyrainTicketService.genDaily(date, train.getCode());
 
 
         LOG.info("结束生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date), train.getCode());

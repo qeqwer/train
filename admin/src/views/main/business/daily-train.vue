@@ -187,6 +187,10 @@ const onClickGenDaily = () => {
 };
 
 const handleGenDailyOk = () => {
+  if(Tool.isEmpty(params.value.date)){
+    notification.error({description: '请选择日期'});
+    return;
+  }
   let date = dayjs(genDaily.value.date).format('YYYY-MM-DD');
   axios.get('/business/admin/daily-train/gen-daily/' + date).then(res => {
     let data = res.data;

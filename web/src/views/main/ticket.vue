@@ -2,7 +2,6 @@
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
-import TrainSelect from "@/components/train-select.vue";
 import StationSelect from "@/components/station-select.vue";
 import dayjs from "dayjs";
 
@@ -26,11 +25,6 @@ const dailyTrainTicketlist = ref([]);
 // let passengerlist = reactive({list:[]});
 
 const columns = [
-  {
-    title: '日期',
-    dataIndex: 'date',
-    key: 'date',
-  },
   {
     title: '车次编号',
     dataIndex: 'trainCode',
@@ -71,6 +65,18 @@ const columns = [
 ];
 
 const handleQuery = (param) => {
+  if(Tool.isEmpty(params.value.date)){
+    notification.error({description: '请选择日期'});
+    return;
+  }
+  if(Tool.isEmpty(params.value.start)){
+    notification.error({description: '请选择出发地'});
+    return;
+  }
+  if(Tool.isEmpty(params.value.end)){
+    notification.error({description: '请选择目的地'});
+    return;
+  }
   if(!param){
     param={
       page: 1,
@@ -116,13 +122,12 @@ const calDuration = (startTime, endTime) => {
 };
 
 
-onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
+onMounted(() =>{});
 </script>
 
 <template>
   <p>
     <a-space>
-      <train-select v-model="params.trainCode" width="200px"/>
       <a-date-picker v-model:value="params.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期" />
       <station-select v-model="params.start" width="200px" placeholder="出发站"/>
       <station-select v-model="params.end" width="200px" placeholder="到达站"/>

@@ -1,5 +1,5 @@
 <script setup>
-const dailyTrainTicket = SessionStorage.get('dailyTrainTicket') || {};
+const dailyTrainTicket = SessionStorage.get(SESSION_ORDER) || {};
 console.log("下单的车次信息", dailyTrainTicket);
 </script>
 

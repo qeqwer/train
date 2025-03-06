@@ -110,6 +110,10 @@ const handleQuery = (param) => {
       size: pagination.value.pageSize
     };
   }
+
+  // 保存查询参数
+  SessionStorage.set(SESSION_TICKET_PARAMS, params.value);
+
   loading.value = true;
   axios.get('/business/daily-train-ticket/query-list', {
     params: {
@@ -150,11 +154,19 @@ const calDuration = (startTime, endTime) => {
 
 const toOrder = (record) => {
   dailyTrainTicket.value = Tool.copy(record);
-  SessionStorage.set("dailyTrainTicket", dailyTrainTicket.value);
+  SessionStorage.set(SESSION_ORDER, dailyTrainTicket.value);
   router.push("/order");
 };
 
-onMounted(() =>{});
+onMounted(() =>{
+  params.value = SessionStorage.get(SESSION_TICKET_PARAMS) || {};
+  if(Tool.isNotEmpty(params.value.date)){
+    handleQuery({
+      page: 1,
+      size: pagination.value.pageSize
+    });
+  }
+});
 </script>
 
 <template>

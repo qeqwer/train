@@ -4,6 +4,7 @@ import axios from "axios";
 import {notification} from "ant-design-vue";
 import TrainSelect from "@/components/train-select.vue";
 import StationSelect from "@/components/station-select.vue";
+import dayjs from "dayjs";
 
 const loading = ref(false);
 const params = ref({
@@ -36,84 +37,36 @@ const columns = [
     key: 'trainCode',
   },
   {
-    title: '出发站',
-    dataIndex: 'start',
-    key: 'start',
+    title: '车站',
+    dataIndex: 'station',
   },
   {
-    title: '出发站拼音',
-    dataIndex: 'startPinyin',
-    key: 'startPinyin',
+    title: '时间',
+    dataIndex: 'time',
   },
   {
-    title: '出发时间',
-    dataIndex: 'startTime',
-    key: 'startTime',
+    title: '历时',
+    dataIndex: 'duration',
   },
   {
-    title: '出发站序',
-    dataIndex: 'startIndex',
-    key: 'startIndex',
-  },
-  {
-    title: '到达站',
-    dataIndex: 'end',
-    key: 'end',
-  },
-  {
-    title: '到达站拼音',
-    dataIndex: 'endPinyin',
-    key: 'endPinyin',
-  },
-  {
-    title: '到站时间',
-    dataIndex: 'endTime',
-    key: 'endTime',
-  },
-  {
-    title: '到站站序',
-    dataIndex: 'endIndex',
-    key: 'endIndex',
-  },
-  {
-    title: '一等座余票',
+    title: '一等座',
     dataIndex: 'ydz',
     key: 'ydz',
   },
   {
-    title: '一等座票价',
-    dataIndex: 'ydzPrice',
-    key: 'ydzPrice',
-  },
-  {
-    title: '二等座余票',
+    title: '二等座',
     dataIndex: 'edz',
     key: 'edz',
   },
   {
-    title: '二等座票价',
-    dataIndex: 'edzPrice',
-    key: 'edzPrice',
-  },
-  {
-    title: '软卧余票',
+    title: '软卧',
     dataIndex: 'rw',
     key: 'rw',
   },
   {
-    title: '软卧票价',
-    dataIndex: 'rwPrice',
-    key: 'rwPrice',
-  },
-  {
-    title: '硬卧余票',
+    title: '硬卧',
     dataIndex: 'yw',
     key: 'yw',
-  },
-  {
-    title: '硬卧票价',
-    dataIndex: 'ywPrice',
-    key: 'ywPrice',
   },
 ];
 
@@ -157,6 +110,11 @@ const handleTableChange = (page) => {
   });
 };
 
+const calDuration = (startTime, endTime) => {
+  let diff = dayjs(endTime, 'HH:mm:ss').diff(dayjs(startTime, 'HH:mm:ss'), 'seconds');
+  return dayjs('00:00:00', 'HH:mm:ss').second(diff).format('HH:mm:ss');
+};
+
 
 onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 </script>
@@ -178,6 +136,59 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
            :loading="loading">
     <template #bodyCell="{column, record}">
       <template v-if="column.dataIndex === 'operation'">
+      </template>
+      <template v-else-if="column.dataIndex === 'station'">
+        {{record.start}}<br/>
+        {{record.end}}
+      </template>
+      <template v-else-if="column.dataIndex === 'time'">
+        {{record.startTime}}<br/>
+        {{record.endTime}}
+      </template>
+      <template v-else-if="column.dataIndex === 'duration'">
+        {{calDuration(record.startTime, record.endTime)}}<br/>
+        <div v-if="record.startTime.replaceAll(':', '') >= record.endTime.replaceAll(':', '')">
+          次日到达
+        </div>
+        <div v-else>
+          当日到达
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'ydz'">
+        <div v-if="record.ydz >= 0">
+          {{record.ydz}}<br/>
+          {{record.ydzPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'edz'">
+        <div v-if="record.edz >= 0">
+          {{record.edz}}<br/>
+          {{record.edzPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'rw'">
+        <div v-if="record.rw >= 0">
+          {{record.rw}}<br/>
+          {{record.rwPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'yw'">
+        <div v-if="record.yw >= 0">
+          {{record.yw}}<br/>
+          {{record.ywPrice}}￥
+        </div>
+        <div v-else>
+          --
+        </div>
       </template>
     </template>
   </a-table>

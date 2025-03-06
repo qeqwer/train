@@ -2,8 +2,16 @@
 import {onMounted, ref} from 'vue';
 import axios from "axios";
 import {notification} from "ant-design-vue";
+import TrainSelect from "@/components/train-select.vue";
+import StationSelect from "@/components/station-select.vue";
 
 const loading = ref(false);
+const params = ref({
+  date: null,
+  trainCode:null,
+  start: null,
+  end: null
+});
 
 
 // 分页的三个属性名是固定的
@@ -121,6 +129,10 @@ const handleQuery = (param) => {
     params: {
       page: param.page,
       size: param.size,
+      date: params.value.date,
+      trainCode: params.value.trainCode,
+      Start: params.value.start,
+      End: params.value.end
     }
   }).then((res) => {
     loading.value = false;
@@ -152,8 +164,11 @@ onMounted(() =>{handleQuery({page: 1, size: pagination.value.pageSize});});
 <template>
   <p>
     <a-space>
-      <a-button type="primary" @click="handleQuery()">刷新</a-button>
-      
+      <train-select v-model="params.trainCode" width="200px"/>
+      <a-date-picker v-model:value="params.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期" />
+      <station-select v-model="params.start" width="200px" placeholder="出发站"/>
+      <station-select v-model="params.end" width="200px" placeholder="到达站"/>
+      <a-button type="primary" @click="handleQuery()">查询</a-button>
     </a-space>
   </p>
   <a-table :dataSource="dailyTrainTicketlist"

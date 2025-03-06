@@ -8,10 +8,7 @@ import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.business.domain.DailyTrain;
-import com.niko.train.business.domain.DailyTrainTicket;
-import com.niko.train.business.domain.DailyTrainTicketExample;
-import com.niko.train.business.domain.TrainStation;
+import com.niko.train.business.domain.*;
 import com.niko.train.business.enums.SeatTypeEnum;
 import com.niko.train.business.enums.TrainTypeEnum;
 import com.niko.train.business.mapper.DailyTrainTicketMapper;
@@ -60,9 +57,21 @@ public class DailyTrainTicketService {
 
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
-        // 降序
         dailyTrainTicketExample.setOrderByClause("id desc");
         DailyTrainTicketExample.Criteria criteria = dailyTrainTicketExample.createCriteria();
+
+        if(ObjectUtil.isNotNull(req.getDate())){
+            criteria.andDateEqualTo(req.getDate());
+        }
+        if(ObjectUtil.isNotEmpty(req.getTrainCode())){
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        }
+        if (ObjectUtil.isNotEmpty(req.getStart())) {
+            criteria.andStartEqualTo(req.getStart());
+        }
+        if (ObjectUtil.isNotEmpty(req.getEnd())) {
+            criteria.andEndEqualTo(req.getEnd());
+        }
 
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());

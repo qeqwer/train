@@ -5,7 +5,7 @@ import {notification} from "ant-design-vue";
 
 const passengerOptions = ref([]); //选项
 const passengerChecks = ref([]);  //选中值
-const PASSENGER_TYPE_ARRAY = window.PASSENGER_TYPE_ARRAY;
+
 
 const dailyTrainTicket = SessionStorage.get(SESSION_ORDER) || {};
 console.log("下单的车次信息", dailyTrainTicket);
@@ -22,8 +22,8 @@ console.log(SEAT_TYPE)
 // }
 // 关于SEAT_TYPE[KEY]：当知道某个具体的属性xxx时，可以用obj.xxx，当属性名是个变量时，可以使用obj[xxx]
 const seatTypes = [];
-// const PASSENGER_TYPE_ARRAY = window.PASSENGER_TYPE_ARRAY;
-// const visible = ref(false);
+const PASSENGER_TYPE_ARRAY = window.PASSENGER_TYPE_ARRAY;
+const visible = ref(false);
 
 for (let KEY in SEAT_TYPE) {
   let key = KEY.toLowerCase();
@@ -84,6 +84,16 @@ watch(() => passengerChecks.value,(newValue, oldValue)=>{
   })
 }, {immediate: true});
 
+const finishCheckPassenger = () => {
+  console.log("购票列表：", tickets.value);
+  if (tickets.value.length > 5) {
+    notification.error({description: "最多只能买五张票"});
+    return;
+  }
+  //弹出确认界面
+  visible.value = true;
+}
+
 onMounted(() => {
   handleQueryPassenger();
 })
@@ -110,10 +120,6 @@ onMounted(() => {
   <a-divider></a-divider>
   <b>勾选要购票的乘客：</b>&nbsp;
   <a-checkbox-group v-model:value="passengerChecks" :options="passengerOptions" />
-  <br/>
-  {{passengerChecks}}
-  <br/>
-  {{tickets}}
   <div class="order-tickets">
     <a-row class="order-tickets-header" v-if="tickets.length > 0">
       <a-col :span="2">乘客</a-col>
@@ -140,6 +146,40 @@ onMounted(() => {
       </a-col>
     </a-row>
   </div>
+  <div v-if="tickets.length > 0">
+    <a-button type="primary" size="large" @click="finishCheckPassenger">提交订单</a-button>
+  </div>
+
+  <a-modal v-model:visible="visible" title="请核对以下信息"
+           style="top: 50px; width: 800px"
+           ok-text="确认" cancel-text="取消">
+    <div class="order-tickets">
+      <a-row class="order-tickets-header" v-if="tickets.length > 0">
+        <a-col :span="3">乘客</a-col>
+        <a-col :span="15">身份证</a-col>
+        <a-col :span="3">票种</a-col>
+        <a-col :span="3">座位类型</a-col>
+      </a-row>
+      <a-row class="order-tickets-row" v-for="ticket in tickets" :key="ticket.passengerId">
+        <a-col :span="3">{{ticket.passengerName}}</a-col>
+        <a-col :span="15">{{ticket.passengerIdCard}}</a-col>
+        <a-col :span="3">
+          <span v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code">
+            <span v-if="item.code === ticket.passengerType">
+              {{item.desc}}
+            </span>
+          </span>
+        </a-col>
+        <a-col :span="3">
+          <span v-for="item in seatTypes" :key="item.code">
+            <span v-if="item.code === ticket.seatTypeCode">
+              {{item.desc}}
+            </span>
+          </span>
+        </a-col>
+      </a-row>
+    </div>
+  </a-modal>
 </template>
 
 

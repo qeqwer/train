@@ -3,6 +3,9 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {notification} from "ant-design-vue";
 
+const passengerOptions = ref([]); //选项
+const passengerChecks = ref([]);  //选中值
+
 const dailyTrainTicket = SessionStorage.get(SESSION_ORDER) || {};
 console.log("下单的车次信息", dailyTrainTicket);
 
@@ -41,6 +44,12 @@ const handleQueryPassenger = () => {
     let data = res.data;
     if (data.success) {
       passengersList.value = data.content;
+      passengersList.value.forEach(item => {
+        passengerOptions.value.push({
+          value: item.id,
+          label: item.name
+        })
+      });
     } else {
       notification.error({description: data.message});
     }
@@ -70,9 +79,11 @@ onMounted(() => {
       </span>
     </div>
   </div>
-  <a-divider>
-    {{passengersList}}
-  </a-divider>
+  <a-divider></a-divider>
+  <b>勾选要购票的乘客：</b>&nbsp;
+  <a-checkbox-group v-model:value="passengerChecks" :options="passengerOptions" />
+  <br/>
+  {{passengerChecks}}
 </template>
 
 <style scoped>

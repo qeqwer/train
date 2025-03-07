@@ -1,4 +1,8 @@
 <script setup>
+import {onMounted, ref} from "vue";
+import axios from "axios";
+import {notification} from "ant-design-vue";
+
 const dailyTrainTicket = SessionStorage.get(SESSION_ORDER) || {};
 console.log("下单的车次信息", dailyTrainTicket);
 
@@ -30,6 +34,22 @@ for (let KEY in SEAT_TYPE) {
   }
 }
 console.log("本车次提供的座位：", seatTypes)
+
+const passengersList = ref([]);
+const handleQueryPassenger = () => {
+  axios.get('/member/passenger/query-mine').then(res => {
+    let data = res.data;
+    if (data.success) {
+      passengersList.value = data.content;
+    } else {
+      notification.error({description: data.message});
+    }
+  });
+}
+
+onMounted(() => {
+  handleQueryPassenger();
+})
 </script>
 
 <template>
@@ -50,6 +70,9 @@ console.log("本车次提供的座位：", seatTypes)
       </span>
     </div>
   </div>
+  <a-divider>
+    {{passengersList}}
+  </a-divider>
 </template>
 
 <style scoped>

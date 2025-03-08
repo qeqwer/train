@@ -208,6 +208,22 @@ const handleOk = () => {
   }
 
   console.log("最终购票：", tickets.value);
+
+  axios.post('/business/confirm-order/do', {
+    dailyTrainTicketId: dailyTrainTicket.id,
+    date: dailyTrainTicket.date,
+    trainCode: dailyTrainTicket.trainCode,
+    start: dailyTrainTicket.start,
+    end: dailyTrainTicket.end,
+    tickets: tickets.value
+  }).then(res => {
+    let data = res.data;
+    if (data.success) {
+      notification.success({description: '下单成功'});
+    } else {
+      notification.error({description: data.message});
+    }
+  });
 }
 
 onMounted(() => {

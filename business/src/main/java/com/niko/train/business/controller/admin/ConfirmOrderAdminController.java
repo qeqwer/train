@@ -1,10 +1,9 @@
 package com.niko.train.business.controller.admin;
 
-import com.niko.train.common.context.LoginMemberContext;
 import com.niko.train.common.resp.CommonResp;
 import com.niko.train.common.resp.PageResp;
 import com.niko.train.business.req.ConfirmOrderQueryReq;
-import com.niko.train.business.req.ConfirmOrderSaveReq;
+import com.niko.train.business.req.ConfirmOrderDoReq;
 import com.niko.train.business.resp.ConfirmOrderQueryResp;
 import com.niko.train.business.service.ConfirmOrderService;
 import jakarta.annotation.Resource;
@@ -19,7 +18,7 @@ public class ConfirmOrderAdminController {
     private ConfirmOrderService confirmOrderService ;
 
     @PostMapping("/save")
-    public CommonResp<Object> save(@Valid @RequestBody ConfirmOrderSaveReq req){
+    public CommonResp<Object> save(@Valid @RequestBody ConfirmOrderDoReq req){
         confirmOrderService.save(req);
         return new CommonResp<>();
     }

@@ -72,17 +72,11 @@ public class ConfirmOrderTicketReq {
         this.passengerIdCard = passengerIdCard;
     }
 
-    public String getSeatTypeCode() {
-        return seatTypeCode;
-    }
+    public String getSeatTypeCode() { return seatTypeCode; }
 
-    public void setSeatTypeCode(String seatTypeCode) {
-        this.seatTypeCode = seatTypeCode;
-    }
+    public void setSeatTypeCode(String seatTypeCode) { this.seatTypeCode = seatTypeCode; }
 
-    public String getSeat() {
-        return seat;
-    }
+    public String getSeat() { return seat; }
 
     public void setSeat(String seat) {
         this.seat = seat;

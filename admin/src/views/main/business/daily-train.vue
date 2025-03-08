@@ -187,7 +187,7 @@ const onClickGenDaily = () => {
 };
 
 const handleGenDailyOk = () => {
-  if(Tool.isEmpty(params.value.date)){
+  if(Tool.isEmpty(genDaily.value.date)){
     notification.error({description: '请选择日期'});
     return;
   }

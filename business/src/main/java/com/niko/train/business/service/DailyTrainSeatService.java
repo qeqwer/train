@@ -130,4 +130,14 @@ public class DailyTrainSeatService {
         }
         return (int) l;
     }
+
+    public List<DailyTrainSeat> selectByCarriage(Date date, String trainCode, String seatType, Integer carriageIndex){
+        DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
+        dailyTrainSeatExample.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode)
+                .andSeatTypeEqualTo(seatType)
+                .andCarriageIndexEqualTo(carriageIndex);
+        return dailyTrainSeatMapper.selectByExample(dailyTrainSeatExample);
+    }
 }

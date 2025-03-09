@@ -49,6 +49,9 @@ public class ConfirmOrderService {
     @Resource
     private DailyTrainSeatService dailyTrainSeatService;
 
+    @Resource
+    private AfterConfirmOrderService afterConfirmOrderService;
+
     public void save(ConfirmOrderDoReq req) {
         ConfirmOrder confirmOrder = BeanUtil.copyProperties(req, ConfirmOrder.class);
         DateTime now = DateTime.now();
@@ -191,6 +194,7 @@ public class ConfirmOrderService {
             }
         }
         LOG.info("最终的选座：{}", finalSeatList);
+        afterConfirmOrderService.afterDoConfirmOrder(dailyTrainTicket,finalSeatList);
 
     }
 

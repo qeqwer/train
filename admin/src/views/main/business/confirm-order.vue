@@ -11,7 +11,7 @@ const CONFIRM_ORDER_STATUS_ARRAY = window.CONFIRM_ORDER_STATUS_ARRAY;
 const pagination = ref({
   total: 0,
   current: 1,
-  pageSize: 3,
+  pageSize: 10,
 });
 
 const confirmOrderlist = ref([]);

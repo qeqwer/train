@@ -16,7 +16,7 @@ watch(()=> router.currentRoute.value.path, (value)=> {
   <a-layout-sider width="200" style="background: #fff">
     <a-menu
         v-model:selectedKeys="selectedKeys"
-        :openKeys="['batch','base','business']"
+        :openKeys="['batch','base','business','member']"
         mode="inline"
         :style="{ height: '100%', borderRight: 0 }"
     >
@@ -30,23 +30,23 @@ watch(()=> router.currentRoute.value.path, (value)=> {
           <user-outlined/> &nbsp; 关于
         </router-link>
       </a-menu-item>
-      <a-sub-menu key="batch">
+      <a-sub-menu key="member">
         <template #title>
           <span>
-            <UnorderedOutlined />
-            跑批管理
+            <UnorderedListOutlined />
+            会员管理
           </span>
         </template>
-      <a-menu-item key="/batch/job">
-        <router-link to="/batch/job">
-          <MenuUnfoldOutlined/> &nbsp; 定时任务
-        </router-link>
-      </a-menu-item>
+        <a-menu-item key="/member/ticket">
+          <router-link to="/member/ticket">
+            <user-outlined/> &nbsp; 会员车票
+          </router-link>
+        </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="business">
         <template #title>
           <span>
-            <UnorderedOutlined/>
+            <UnorderedListOutlined/>
             业务管理
           </span>
         </template>
@@ -84,7 +84,7 @@ watch(()=> router.currentRoute.value.path, (value)=> {
       <a-sub-menu key="base">
         <template #title>
           <span>
-            <UnorderedOutlined/>
+            <UnorderedListOutlined/>
             基础数据
           </span>
         </template>
@@ -111,6 +111,19 @@ watch(()=> router.currentRoute.value.path, (value)=> {
         <a-menu-item key="/base/train-seat">
           <router-link to="/base/train-seat">
             <user-outlined/> &nbsp; 火车座位
+          </router-link>
+        </a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="batch">
+        <template #title>
+          <span>
+            <UnorderedListOutlined />
+            跑批管理
+          </span>
+        </template>
+        <a-menu-item key="/batch/job">
+          <router-link to="/batch/job">
+            <MenuUnfoldOutlined/> &nbsp; 定时任务
           </router-link>
         </a-menu-item>
       </a-sub-menu>

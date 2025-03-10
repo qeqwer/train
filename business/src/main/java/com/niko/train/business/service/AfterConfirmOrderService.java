@@ -1,7 +1,9 @@
 package com.niko.train.business.service;
 
+import com.niko.train.business.domain.ConfirmOrder;
 import com.niko.train.business.domain.DailyTrainSeat;
 import com.niko.train.business.domain.DailyTrainTicket;
+import com.niko.train.business.enums.ConfirmOrderStatusEnum;
 import com.niko.train.business.feign.MemberFeign;
 import com.niko.train.business.mapper.ConfirmOrderMapper;
 import com.niko.train.business.mapper.DailyTrainSeatMapper;
@@ -45,7 +47,7 @@ public class AfterConfirmOrderService {
      */
     @Transactional
     public void afterDoConfirmOrder(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalList,
-                                    List<ConfirmOrderTicketReq> tickets) {
+                                    List<ConfirmOrderTicketReq> tickets, ConfirmOrder confirmOrder) {
         for (int j = 0; j < finalList.size(); j++) {
             DailyTrainSeat dailyTrainSeat = finalList.get(j);
             DailyTrainSeat seatForUpdate = new DailyTrainSeat();
@@ -116,6 +118,13 @@ public class AfterConfirmOrderService {
             memberTicketReq.setSeatType(dailyTrainSeat.getSeatType());
             CommonResp<Object> commonResp = memberFeign.save(memberTicketReq);
             LOG.info("调用member接口，返回：{}", commonResp);
+
+            // 更新确认订单为成功
+            ConfirmOrder confirmOrderForUpdate = new ConfirmOrder();
+            confirmOrderForUpdate.setId(confirmOrder.getId());
+            confirmOrderForUpdate.setUpdateTime(new Date());
+            confirmOrderForUpdate.setStatus(ConfirmOrderStatusEnum.SUCCESS.getCode());
+            confirmOrderMapper.updateByPrimaryKeySelective(confirmOrderForUpdate);
 
 
         }

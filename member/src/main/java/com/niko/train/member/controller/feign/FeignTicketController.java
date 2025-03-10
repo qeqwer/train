@@ -1,20 +1,20 @@
 package com.niko.train.member.controller.feign;
 
+import com.niko.train.common.req.MemberTicketReq;
+import com.niko.train.common.resp.CommonResp;
+import com.niko.train.member.service.TicketService;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.niko.train.common.req.MemberTicketReq;
-import com.niko.train.common.resp.CommonResp;
-import com.niko.train.member.service.TicketService;
 
 @RestController
 @RequestMapping("/feign/ticket")
 public class FeignTicketController {
 
-    @Autowired
+    @Resource
     private TicketService ticketService;
 
     @PostMapping("/save")

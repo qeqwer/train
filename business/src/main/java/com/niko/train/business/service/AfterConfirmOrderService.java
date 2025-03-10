@@ -2,9 +2,14 @@ package com.niko.train.business.service;
 
 import com.niko.train.business.domain.DailyTrainSeat;
 import com.niko.train.business.domain.DailyTrainTicket;
+import com.niko.train.business.feign.MemberFeign;
 import com.niko.train.business.mapper.ConfirmOrderMapper;
 import com.niko.train.business.mapper.DailyTrainSeatMapper;
 import com.niko.train.business.mapper.cust.DailyTrainTicketCustMapper;
+import com.niko.train.business.req.ConfirmOrderTicketReq;
+import com.niko.train.common.context.LoginMemberContext;
+import com.niko.train.common.req.MemberTicketReq;
+import com.niko.train.common.resp.CommonResp;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +33,9 @@ public class AfterConfirmOrderService {
     @Resource
     private DailyTrainTicketCustMapper dailyTrainTicketCustMapper;
 
+    @Resource
+    private MemberFeign memberFeign;
+
     /**
      * 选中座位后的事务处理
      *     座位表修改售卖情况sell；
@@ -36,8 +44,10 @@ public class AfterConfirmOrderService {
      *     更新确认订单为成功。
      */
     @Transactional
-    public void afterDoConfirmOrder(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalList) {
-        for (DailyTrainSeat dailyTrainSeat : finalList) {
+    public void afterDoConfirmOrder(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalList,
+                                    List<ConfirmOrderTicketReq> tickets) {
+        for (int j = 0; j < finalList.size(); j++) {
+            DailyTrainSeat dailyTrainSeat = finalList.get(j);
             DailyTrainSeat seatForUpdate = new DailyTrainSeat();
             seatForUpdate.setId(dailyTrainSeat.getId());
             seatForUpdate.setSell(dailyTrainSeat.getSell());
@@ -88,6 +98,24 @@ public class AfterConfirmOrderService {
                     minEndIndex,
                     maxEndIndex
             );
+
+            // 调用会员服务接口，为会员增加一张车票
+            MemberTicketReq memberTicketReq = new MemberTicketReq();
+            memberTicketReq.setMemberId(LoginMemberContext.getId());
+            memberTicketReq.setPassengerId(tickets.get(j).getPassengerId());
+            memberTicketReq.setPassengerName(tickets.get(j).getPassengerName());
+            memberTicketReq.setTrainDate(dailyTrainTicket.getDate());
+            memberTicketReq.setTrainCode(dailyTrainTicket.getTrainCode());
+            memberTicketReq.setCarriageIndex(dailyTrainSeat.getCarriageIndex());
+            memberTicketReq.setSeatRow(dailyTrainSeat.getRow());
+            memberTicketReq.setSeatCol(dailyTrainSeat.getCol());
+            memberTicketReq.setStartStation(dailyTrainTicket.getStart());
+            memberTicketReq.setStartTime(dailyTrainTicket.getStartTime());
+            memberTicketReq.setEndStation(dailyTrainTicket.getEnd());
+            memberTicketReq.setEndTime(dailyTrainTicket.getEndTime());
+            memberTicketReq.setSeatType(dailyTrainSeat.getSeatType());
+            CommonResp<Object> commonResp = memberFeign.save(memberTicketReq);
+            LOG.info("调用member接口，返回：{}", commonResp);
 
 
         }

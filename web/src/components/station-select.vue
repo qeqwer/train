@@ -23,17 +23,25 @@ watch(() => props.modelValue, ()=>{
 }, {immediate: true});
 
 /**
- * 查询所有的车次，用于车次下拉框
+ * 查询所有的车站，用于车次下拉框
  */
 const queryAll = () => {
-  axios.get('/business/station/query-all').then(res => {
-    let data = res.data;
-    if (data.success) {
-      stations.value= data.content;
-    } else {
-      notification.error({description: data.message});
-    }
-  });
+  let list = SessionStorage.get(SESSION_ALL_STATION);
+  if (Tool.isNotEmpty(list)){
+    console.log("queryAllStation读取缓存")
+    stations.value = list;
+  } else {
+    axios.get('/business/station/query-all').then(res => {
+      let data = res.data;
+      if (data.success) {
+        stations.value= data.content;
+        console.log("queryAllStation保存缓存");
+        SessionStorage.set(SESSION_ALL_STATION, stations.value);
+      } else {
+        notification.error({description: data.message});
+      }
+    });
+  }
 };
 
 /**

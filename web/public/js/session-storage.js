@@ -6,6 +6,9 @@
 SESSION_ORDER = "SESSION_ORDER";
 SESSION_TICKET_PARAMS = "SESSION_TICKET_PARAMS";
 
+SESSION_ALL_TRAIN = "SESSION_ALL_TRAIN";
+SESSION_ALL_STATION ="SESSION_ALL_STATION";
+
 // sessionStorage，会话缓存，浏览器关闭失效；
 // LocalStorage,浏览器关闭后重新打开有效
 SessionStorage = {

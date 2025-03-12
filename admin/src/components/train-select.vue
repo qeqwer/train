@@ -26,14 +26,22 @@ watch(() => props.modelValue, ()=>{
  * 查询所有的车次，用于车次下拉框
  */
 const queryAll = () => {
-  axios.get('/business/admin/train/query-all').then(res => {
-    let data = res.data;
-    if (data.success) {
-      trains.value= data.content;
-    } else {
-      notification.error({description: data.message});
-    }
-  });
+  let list = SessionStorage.get(SESSION_ALL_TRAIN);
+  if(Tool.isNotEmpty(list)){
+    console.log("queryAllTrain读取缓存");
+    trains.value = list;
+  } else {
+    axios.get('/business/admin/train/query-all').then(res => {
+      let data = res.data;
+      if (data.success) {
+        trains.value= data.content;
+        console.log("queryAllTrain保存缓存");
+        SessionStorage.set(SESSION_ALL_TRAIN, trains.value);
+      } else {
+        notification.error({description: data.message});
+      }
+    });
+  }
 };
 
 /**

@@ -13,7 +13,6 @@ import com.niko.train.common.context.LoginMemberContext;
 import com.niko.train.common.req.MemberTicketReq;
 import com.niko.train.common.resp.CommonResp;
 import io.seata.core.context.RootContext;
-import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ public class AfterConfirmOrderService {
      *     为会员增加购票记录；
      *     更新确认订单为成功。
      */
-    @GlobalTransactional
+//    @GlobalTransactional
 //    @Transactional
     public void afterDoConfirmOrder(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalList,
                                     List<ConfirmOrderTicketReq> tickets, ConfirmOrder confirmOrder) throws Exception{

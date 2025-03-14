@@ -130,6 +130,7 @@ public class AfterConfirmOrderService {
             confirmOrderMapper.updateByPrimaryKeySelective(confirmOrderForUpdate);
 
             // 模拟被调用方法出现异常
+//            Thread.sleep(10000);
 //            if(1 == 1){
 //                throw new Exception("测试异常2");
 //            }

@@ -1,0 +1,22 @@
+POST http://localhost:8000/business/confirm-order/do
+Content-Type: application/json
+token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3NDE5MzQyNjEsIm1vYmlsZSI6IjE4OTQzMTkxNTYxIiwiaWQiOjEsImV4cCI6MTc0MjAyMDY2MSwiaWF0IjoxNzQxOTM0MjYxfQ.yp8smmOVXSn6RJCXYUFgeQH4myZyGalFdsyNJWvloK8
+
+{
+  "dailyTrainTicketId": 1899061455601405952,
+  "date": 1742832000000,
+  "end": "济南西",
+  "start": "徐州东",
+  "tickets": [
+    {
+      "passengerId": 1893269845940768768,
+      "passengerIdCard": "123456",
+      "passengerName": "niko",
+      "passengerType": "1",
+      "seatTypeCode": "1"
+    }
+  ],
+  "trainCode": "G1"
+}
+
+###

@@ -102,5 +102,7 @@ public class SkTokenService {
         int count = (int) (seatCount * stationCount * 3/4);
         LOG.info("日期【{}】车次【{}】的令牌数：{}", DateUtil.formatDate(date), trainCode, count);
         skToken.setCount(count);
+
+        skTokenMapper.insert(skToken);
     }
 }

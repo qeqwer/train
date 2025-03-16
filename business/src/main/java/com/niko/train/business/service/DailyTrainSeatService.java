@@ -8,7 +8,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.business.domain.*;
+import com.niko.train.business.domain.DailyTrainSeat;
+import com.niko.train.business.domain.DailyTrainSeatExample;
+import com.niko.train.business.domain.TrainSeat;
+import com.niko.train.business.domain.TrainStation;
 import com.niko.train.business.mapper.DailyTrainSeatMapper;
 import com.niko.train.business.req.DailyTrainSeatQueryReq;
 import com.niko.train.business.req.DailyTrainSeatSaveReq;
@@ -118,12 +121,17 @@ public class DailyTrainSeatService {
         }
     }
 
+    public int countSeat(Date date, String trainCode){
+        return countSeat(date, trainCode, null);
+    }
     public int countSeat(Date date, String trainCode, String seatType){
         DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
-        dailyTrainSeatExample.createCriteria()
-                .andDateEqualTo(date)
-                .andTrainCodeEqualTo(trainCode)
-                .andSeatTypeEqualTo(seatType);
+        DailyTrainSeatExample.Criteria criteria = dailyTrainSeatExample.createCriteria();
+        criteria.andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode);
+        if(StrUtil.isNotEmpty(seatType)){
+            criteria.andSeatTypeEqualTo(seatType);
+        }
         long l =  dailyTrainSeatMapper.countByExample(dailyTrainSeatExample);
         if(l == 0L){
             return -1;

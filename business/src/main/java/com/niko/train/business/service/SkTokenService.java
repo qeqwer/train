@@ -2,22 +2,24 @@ package com.niko.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.niko.train.common.resp.PageResp;
-import com.niko.train.common.util.SnowUtil;
 import com.niko.train.business.domain.SkToken;
 import com.niko.train.business.domain.SkTokenExample;
 import com.niko.train.business.mapper.SkTokenMapper;
 import com.niko.train.business.req.SkTokenQueryReq;
 import com.niko.train.business.req.SkTokenSaveReq;
 import com.niko.train.business.resp.SkTokenQueryResp;
+import com.niko.train.common.resp.PageResp;
+import com.niko.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,6 +28,10 @@ public class SkTokenService {
     private static final Logger LOG = LoggerFactory.getLogger(SkTokenService.class);
     @Resource
     private SkTokenMapper skTokenMapper;
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
+    @Resource
+    private DailyTrainStationService dailyTrainStationService;
 
     public void save(SkTokenSaveReq req) {
         SkToken skToken = BeanUtil.copyProperties(req, SkToken.class);
@@ -71,7 +77,30 @@ public class SkTokenService {
         skTokenMapper.deleteByPrimaryKey(id);
     }
 
+    public void genDaily(Date date, String trainCode){
+        LOG.info("删除日期【{}】车次【{}】的令牌信息开始", DateUtil.formatDate(date), trainCode);
+        SkTokenExample skTokenExample = new SkTokenExample();
+        skTokenExample.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode);
+        skTokenMapper.deleteByExample(skTokenExample);
 
+        DateTime now = DateTime.now();
+        SkToken skToken = new SkToken();
+        skToken.setDate(date);
+        skToken.setTrainCode(trainCode);
+        skToken.setId(SnowUtil.getSnowflakeNextId());
+        skToken.setCreateTime(now);
+        skToken.setUpdateTime(now);
 
+        int seatCount = dailyTrainSeatService.countSeat(date, trainCode);
+        LOG.info("日期【{}】车次【{}】的座位数：{}", DateUtil.formatDate(date), trainCode, seatCount);
 
+        long stationCount = dailyTrainStationService.countByTrainCode(date, trainCode);
+        LOG.info("日期【{}】车次【{}】的站数：{}", DateUtil.formatDate(date), trainCode, stationCount);
+
+        int count = (int) (seatCount * stationCount * 3/4);
+        LOG.info("日期【{}】车次【{}】的令牌数：{}", DateUtil.formatDate(date), trainCode, count);
+        skToken.setCount(count);
+    }
 }
